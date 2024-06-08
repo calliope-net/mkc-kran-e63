@@ -7,6 +7,9 @@ radio.onReceivedData(function (receivedData) {
         kran_e.rgbLEDon(kran_e.eRGBled.a, 0xff0000, radio.getaktiviert(receivedData, radio.e3aktiviert.m0))
         kran_e.rgbLEDs(kran_e.eRGBled.b, 0x00ff00, true)
     }
+    if (kran_e.chStatus() && radio.getSchalter(receivedData, radio.e0Schalter.b6)) {
+        radio.sendString(kran_e.getStatus())
+    }
 })
 kran_e.beimStart(239, 90)
 loops.everyInterval(700, function () {

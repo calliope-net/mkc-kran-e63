@@ -7,6 +7,8 @@ namespace kran_e { // kran-e.ts
 
     const c_Simulator: boolean = ("€".charCodeAt(0) == 8364)
     let n_ready = false
+    let n_StatusChanged = false
+    let n_StatusString = ""
 
     export const c_MotorStop = 128
     // export let n_MotorChipReady = false
@@ -76,7 +78,9 @@ namespace kran_e { // kran-e.ts
         //  if (n_MotorPower) {
         if (n_MotorPower && radio.between(speed, 1, 255)) {
             //let duty_percent = (speed == c_MotorStop ? 0 : Math.map(speed, 1, 255, -100, 100))
-            let duty_percent = Math.round(Math.map(speed, 1, 255, -100, 100))
+            //            let duty_percent = Math.round(Math.map(speed, 1, 255, -100, 100))
+            let duty_percent = radio.mapInt32(speed, 1, 255, -100, 100)
+            //n_StatusString = duty_percent.toString()
 
             if (motor == Motor.M0 && speed != n_Motor0) {
                 n_Motor0 = speed
@@ -138,11 +142,35 @@ namespace kran_e { // kran-e.ts
     }
 
 
-
     // group="Servo"
     // block="Servo (135° ↖ 90° ↗ 45°)" weight=2
     function servo_get() { return n_ServoWinkel }
 
+
+
+    // ========== group="Status zurück senden"
+
+    //% group="Status zurück senden"
+    //% block="Status += %pStatus" weight=5
+    export function addStatus(pStatus: any) {
+        n_StatusString += " " + convertToText(pStatus)
+        n_StatusChanged = true
+    }
+
+    //% group="Status zurück senden"
+    //% block="Status Änderung || löschen %clear" weight=4
+    //% clear.shadow="toggleYesNo"
+    //% clear.defl=1
+    export function chStatus(clear = true) {
+        if (clear)
+            n_StatusChanged = false
+        return n_StatusChanged
+    }
+
+
+    //% group="Status zurück senden"
+    //% block="Status Text" weight=3
+    export function getStatus() { return "1" + n_StatusString }
 
 
 
