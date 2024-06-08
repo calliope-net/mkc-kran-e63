@@ -1,0 +1,28 @@
+{
+    "name": "mkc-kran-e63",
+    "description": "",
+    "dependencies": {
+        "core": "*",
+        "v3": "*",
+        "fernsteuerung": "github:calliope-net/fernsteuerung#v0.1.12",
+        "radio": "*"
+    },
+    "files": [
+        "main.blocks",
+        "main.ts",
+        "README.md",
+        "kran_e.ts",
+        "aktoren.ts"
+    ],
+    "testFiles": [
+        "test.ts"
+    ],
+    "targetVersions": {
+        "target": "6.0.37",
+        "targetId": "calliopemini"
+    },
+    "supportedTargets": [
+        "calliopemini"
+    ],
+    "preferredEditor": "blocksprj"
+}
