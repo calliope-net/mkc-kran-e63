@@ -1,16 +1,16 @@
-//% color=#007F00 icon="\uf0d1" block="Kran Empfänger" weight=06
+//% color=#007F00 icon="\uf0d1" block="Kran Empfänger" weight=95
 namespace kran_e { // kran-e.ts
 
 
     export const pinServo = AnalogPin.P1           // 5V fischertechnik 132292 Servo
     export const pinEncoder = DigitalPin.P2        // 5V fischertechnik 186175 Encodermotor Competition
 
-    const c_Simulator: boolean = ("€".charCodeAt(0) == 8364)
+    //const c_Simulator: boolean = ("€".charCodeAt(0) == 8364)
     let n_ready = false
-    let n_StatusChanged = false
+    //   let n_StatusChanged = false
     let n_StatusString = ""
 
-    export const c_MotorStop = 128
+    const c_MotorStop = 128
     // export let n_MotorChipReady = false
     let n_MotorPower = false    // aktueller Wert im Chip Motor Power
     let n_Motor0 = c_MotorStop  // aktueller Wert im Chip
@@ -40,14 +40,14 @@ namespace kran_e { // kran-e.ts
         // in bluetooth.ts:
         radio.beimStart(funkgruppe)
 
-        n_ready = true
+        n_ready = motorReset(ei2cMotor.i2cMotorAB) && motorReset(ei2cMotor.i2cMotorCD)
     }
 
 
     // group="calliope-net.github.io/mkc-63"
     // block="Car bereit" weight=6
     export function carReady() {
-        return n_ready //&& motorStatus()
+        return n_ready && motorStatus(ei2cMotor.i2cMotorAB) && motorStatus(ei2cMotor.i2cMotorCD)
     }
 
 
@@ -154,23 +154,22 @@ namespace kran_e { // kran-e.ts
     //% block="Status += %pStatus" weight=5
     export function addStatus(pStatus: any) {
         n_StatusString += " " + convertToText(pStatus)
-        n_StatusChanged = true
     }
 
     //% group="Status zurück senden"
-    //% block="Status Änderung || löschen %clear" weight=4
+    //% block="Status Änderung" weight=4
+    export function chStatus(): boolean { return n_StatusString.length > 0 }
+
+    //% group="Status zurück senden"
+    //% block="Status Text || löschen %clear" weight=3
     //% clear.shadow="toggleYesNo"
     //% clear.defl=1
-    export function chStatus(clear = true) {
+    export function getStatus(clear = true) {
+        let s = n_StatusString
         if (clear)
-            n_StatusChanged = false
-        return n_StatusChanged
+            n_StatusString = ""
+        return "1" + s
     }
-
-
-    //% group="Status zurück senden"
-    //% block="Status Text" weight=3
-    export function getStatus() { return "1" + n_StatusString }
 
 
 

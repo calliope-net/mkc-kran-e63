@@ -12,7 +12,8 @@
         "main.ts",
         "README.md",
         "kran_e.ts",
-        "aktoren.ts"
+        "aktoren.ts",
+        "qwiicmotor.ts"
     ],
     "testFiles": [
         "test.ts"
@@ -24,5 +25,5 @@
     "supportedTargets": [
         "calliopemini"
     ],
-    "preferredEditor": "blocksprj"
+    "preferredEditor": "tsprj"
 }
