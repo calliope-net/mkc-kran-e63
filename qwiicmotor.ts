@@ -2,10 +2,21 @@
 namespace kran_e { // qwiicmotor.ts
 
     // I²C Adresse Motor Modul
-    //const i2cMotorAB = 0x5D
-    //const i2cMotorCD = 0x5E
+    const i2cMotorAB = 0x5D
+    const i2cMotorCD = 0x5E
 
     export enum ei2cMotor { i2cMotorAB = 0x5D, i2cMotorCD = 0x5E }
+
+    export enum eMotor {
+        //% block="MA"
+        ma = 0,
+        //% block="MB"
+        mb = 1,
+        //% block="MC"
+        mc = 2,
+        //% block="MD"
+        md = 3,
+    }
 
     // Register
     const ID = 0x01 // Reports hard-coded ID byte of 0xA9
@@ -66,6 +77,33 @@ namespace kran_e { // qwiicmotor.ts
             return n_MotorReady
         }
     }
+
+
+
+    // ========== qwiicMotor: pins.i2cWriteBuffer pins.i2cReadBuffer
+
+    function i2cWriteBuffer(pMotor: eMotor, bytes: number[], repeat = false) {
+        switch (pMotor) {
+            case eMotor.ma, eMotor.mb:
+                return pins.i2cWriteBuffer(i2cMotorAB, Buffer.fromArray(bytes), repeat) == 0
+            case eMotor.mc, eMotor.md:
+                return pins.i2cWriteBuffer(i2cMotorCD, Buffer.fromArray(bytes), repeat) == 0
+            default:
+                return false
+        }
+    }
+
+    function i2cReadBuffer(pMotor: eMotor, size: number): Buffer {
+        switch (pMotor) {
+            case eMotor.ma, eMotor.mb:
+                return pins.i2cReadBuffer(i2cMotorAB, size)
+            case eMotor.mc, eMotor.md:
+                return pins.i2cReadBuffer(i2cMotorCD, size)
+            default:
+                return Buffer.create(size)
+        }
+    }
+
 
 
 } // qwiicmotor.ts

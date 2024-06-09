@@ -40,7 +40,7 @@ namespace kran_e { // kran-e.ts
         // in bluetooth.ts:
         radio.beimStart(funkgruppe)
 
-        n_ready = motorReset(ei2cMotor.i2cMotorAB) && motorReset(ei2cMotor.i2cMotorCD)
+      //  n_ready = motorReset(ei2cMotor.i2cMotorAB) && motorReset(ei2cMotor.i2cMotorCD)
     }
 
 
@@ -170,7 +170,6 @@ namespace kran_e { // kran-e.ts
             n_StatusString = ""
         return "1" + s
     }
-
 
 
 } // kran-e.ts
