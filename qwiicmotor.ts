@@ -86,9 +86,8 @@ namespace kran_e { // qwiicmotor.ts
 
 
 
-    // group="Motor"
-    // block="Motor Reset %i2cMotor" weight=9
-    export function qMotorReset() {
+  
+    export function qMotorReset() { // aufgerufen beim Start
 
         n_MotorChipReady = [false, false, false, false]
 
@@ -115,11 +114,10 @@ namespace kran_e { // qwiicmotor.ts
             addStatusHEX(0x10 + i2cMotorCD)
             return false
         }
-
     }
 
 
-    function qMotorChipReady(pMotor: eMotor) {
+    function qMotorChipReady(pMotor: eMotor) { // fragt den I²C Status ab wenn false
         if (n_MotorChipReady[pMotor])
             return true
         else {
@@ -145,7 +143,7 @@ namespace kran_e { // qwiicmotor.ts
 
 
     //% group="Motor"
-    //% block="Motor %pMotor Power %pON" weight=7
+    //% block="Motor %pMotor Power %pON" weight=3
     //% pON.shadow="toggleOnOff"
     export function qMotorPower(pMotor: eMotor, pON: boolean) { // sendet nur wenn der Wert sich ändert
         if (qMotorChipReady(pMotor) && (pON !== n_MotorPower[pMotor])) { // !== XOR eine Seite ist true aber nicht beide
@@ -154,10 +152,8 @@ namespace kran_e { // qwiicmotor.ts
         }
     }
 
-
-
     //% group="Motor"
-    //% block="Motor %pMotor (1 ↓ 128 ↑ 255) %speed (128 ist STOP)" weight=4
+    //% block="Motor %pMotor (1 ↓ 128 ↑ 255) %speed (128 ist STOP)" weight=2
     //% speed.min=0 speed.max=255 speed.defl=128
     export function qMotor255(pMotor: eMotor, speed: number) {
         if (qMotorChipReady(pMotor)) {

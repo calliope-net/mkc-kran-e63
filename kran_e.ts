@@ -73,7 +73,7 @@ namespace kran_e { // kran-e.ts
 
 
     //% group="Motor"
-    //% block="Motor %motor (1 ↓ 128 ↑ 255) %speed (128 ist STOP)" weight=4
+    //% block="Motor %motor (1 ↓ 128 ↑ 255) %speed (128 ist STOP)" weight=6
     //% speed.min=0 speed.max=255 speed.defl=128
     export function motor255(motor: Motor, speed: number) { // sendet nur an MotorChip, wenn der Wert sich ändert
         //  if (n_MotorPower) {
