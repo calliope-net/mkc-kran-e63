@@ -157,7 +157,7 @@ namespace kran_e { // qwiicmotor.ts
 
 
     //% group="Motor"
-    //% block="Motor %pMotor (0 ↓ 128 ↑ 255) %speed (128 ist STOP)" weight=4
+    //% block="Motor %pMotor (1 ↓ 128 ↑ 255) %speed (128 ist STOP)" weight=4
     //% speed.min=0 speed.max=255 speed.defl=128
     export function qMotor255(pMotor: eMotor, speed: number) {
         if (qMotorChipReady(pMotor)) {

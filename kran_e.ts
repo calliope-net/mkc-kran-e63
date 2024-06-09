@@ -12,7 +12,7 @@ namespace kran_e { // kran-e.ts
 
     const c_MotorStop = 128
     // export let n_MotorChipReady = false
-    let n_MotorPower = false    // aktueller Wert im Chip Motor Power
+    //  let n_MotorPower = false    // aktueller Wert im Chip Motor Power
     let n_Motor0 = c_MotorStop  // aktueller Wert im Chip
     let n_Motor1 = c_MotorStop  // aktueller Wert im Chip
 
@@ -57,7 +57,7 @@ namespace kran_e { // kran-e.ts
     //% group="Motor"
     //% block="Motor Power %pON" weight=7
     //% pON.shadow="toggleOnOff"
-    export function motorPower(pON: boolean) { // sendet nur wenn der Wert sich ändert
+    /*  function motorPower(pON: boolean) { // sendet nur wenn der Wert sich ändert
         // if (motorStatus() && (pON !== n_MotorON)) { // !== XOR eine Seite ist true aber nicht beide
         if (pON !== n_MotorPower) {
             //motors.dualMotorPower(Motor.M0_M1, 0)
@@ -67,7 +67,7 @@ namespace kran_e { // kran-e.ts
             if (!n_MotorPower && n_Motor1 != c_MotorStop)
                 motors.dualMotorPower(Motor.M1, 0)
         }
-    }
+    } */
     // pins.i2cWriteBuffer(i2cMotor, Buffer.fromArray([DRIVER_ENABLE, n_MotorON ? 0x01 : 0x00]))
 
 
@@ -77,7 +77,7 @@ namespace kran_e { // kran-e.ts
     //% speed.min=0 speed.max=255 speed.defl=128
     export function motor255(motor: Motor, speed: number) { // sendet nur an MotorChip, wenn der Wert sich ändert
         //  if (n_MotorPower) {
-        if (n_MotorPower && radio.between(speed, 1, 255)) {
+        if (radio.between(speed, 1, 255)) {
             //let duty_percent = (speed == c_MotorStop ? 0 : Math.map(speed, 1, 255, -100, 100))
             //            let duty_percent = Math.round(Math.map(speed, 1, 255, -100, 100))
             let duty_percent = radio.mapInt32(speed, 1, 255, -100, 100)
@@ -96,8 +96,12 @@ namespace kran_e { // kran-e.ts
                 n_Motor1 = speed
                 motors.dualMotorPower(motor, duty_percent)
             }
-        } else {
-            motors.dualMotorPower(motor, 0)
+        } else { // n_MotorPower false oder speed=0
+            motor255(motor, c_MotorStop) // 128
+
+            //n_Motor0 = c_MotorStop
+            //n_Motor1 = c_MotorStop
+            //motors.dualMotorPower(Motor.M0_M1, 0)
         }
     }
 
