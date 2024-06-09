@@ -2,10 +2,10 @@
 namespace kran_e { // qwiicmotor.ts
 
     // I²C Adresse Motor Modul
-    //const i2cMotorAB = 0x5D
-    //const i2cMotorCD = 0x5E
+    const i2cMotorAB = 0x5D
+    const i2cMotorCD = 0x5E
 
-    export enum ei2cMotor { i2cMotorAB = 0x5D, i2cMotorCD = 0x5E }
+  //  export enum ei2cMotor { i2cMotorAB = 0x5D, i2cMotorCD = 0x5E }
 
     export enum eMotor {
         //% block="MA"
@@ -39,8 +39,8 @@ namespace kran_e { // qwiicmotor.ts
 
     // group="Motor"
     // block="Motor Reset %i2cMotor" weight=9
-    export function motorReset(i2cMotor: ei2cMotor) {
-        switch (i2cMotor) {
+    export function qMotorReset() {
+        /* switch (i2cMotor) {
             case ei2cMotor.i2cMotorAB: {
                 n_MotorChipReady[eMotor.ma] = false
                 n_MotorChipReady[eMotor.mb] = false
@@ -49,8 +49,37 @@ namespace kran_e { // qwiicmotor.ts
                 n_MotorChipReady[eMotor.mc] = false
                 n_MotorChipReady[eMotor.md] = false
             }
+        } */
+        n_MotorChipReady = [false, false, false, false]
+
+        // Motor Chip AB
+        if (!i2cWriteBuffer(eMotor.ma, [ID], true)) {
+            addStatusHEX(i2cMotorAB) // Modul reagiert nicht
+            return false
+        } else if (i2cReadBuffer(eMotor.ma, 1)[0] == 0xA9) { // Reports hard-coded ID byte of 0xA9
+            i2cWriteBuffer(eMotor.ma, [CONTROL_1, 1]) // Reset the processor now.
+            // hier weiter zum nächsten Motor Chip
+        } else {
+            addStatusHEX(0x10 + i2cMotorAB)
+            return false
         }
-        if (pins.i2cWriteBuffer(i2cMotor, Buffer.fromArray([ID]), true) != 0) {
+
+        // Motor Chip CD
+        if (!i2cWriteBuffer(eMotor.mc, [ID], true)) {
+            addStatusHEX(i2cMotorCD) // Modul reagiert nicht
+            return false
+        } else if (i2cReadBuffer(eMotor.mc, 1)[0] == 0xA9) { // Reports hard-coded ID byte of 0xA9
+            return i2cWriteBuffer(eMotor.mc, [CONTROL_1, 1]) // Reset the processor now.
+            // hier return true
+        } else {
+            addStatusHEX(0x10 + i2cMotorCD)
+            return false
+        }
+
+
+
+
+        /* if (pins.i2cWriteBuffer(i2cMotor, Buffer.fromArray([ID]), true) != 0) {
             addStatusHEX(i2cMotor)
             return false
         } else if (pins.i2cReadBuffer(i2cMotor, 1).getUint8(0) == 0xA9) { // Reports hard-coded ID byte of 0xA9
@@ -58,14 +87,14 @@ namespace kran_e { // qwiicmotor.ts
             return true
         } else
             addStatusHEX(0x10 + i2cMotor)
-        return false
+        return false */
     }
 
-    function motorChipReady(pMotor: eMotor) {
+    function qMotorChipReady(pMotor: eMotor) {
         if (n_MotorChipReady[pMotor])
             return true
         else {
-            let i2cMotor: ei2cMotor
+            /* let i2cMotor: ei2cMotor
             switch (pMotor) {
                 case eMotor.ma, eMotor.mb: {
                     i2cMotor = ei2cMotor.i2cMotorAB
@@ -75,7 +104,7 @@ namespace kran_e { // qwiicmotor.ts
                     i2cMotor = ei2cMotor.i2cMotorCD
                     break
                 }
-            } // switch
+            } // switch */
             /*
             bool ready( void );
             This function checks to see if the SCMD is done booting and is ready to receive commands. Use this
@@ -87,15 +116,54 @@ namespace kran_e { // qwiicmotor.ts
                 B3: 1 = Remote write in progress
                 B4: Read state of enable pin U2.5"
             */
-            n_MotorChipReady[pMotor] = (pins.i2cWriteBuffer(i2cMotor, Buffer.fromArray([STATUS_1]), true) == 0
-                && (pins.i2cReadBuffer(i2cMotor, 1).getUint8(0) & 0x01) == 1) // STATUS_1
+            n_MotorChipReady[pMotor] = (i2cWriteBuffer(pMotor, [STATUS_1], true) 
+                && (i2cReadBuffer(pMotor, 1)[0] & 0x01) == 1) // STATUS_1
 
             return n_MotorChipReady[pMotor]
         } // else
     }
 
 
-   
+    //% group="Motor"
+    //% block="Motor %pMotor Power %pON" weight=7
+    //% pON.shadow="toggleOnOff"
+    export function qMotorPower(pMotor: eMotor, pON: boolean) { // sendet nur wenn der Wert sich ändert
+        if (qMotorChipReady(pMotor) && (pON !== n_MotorPower[pMotor])) { // !== XOR eine Seite ist true aber nicht beide
+            n_MotorPower[pMotor] = pON
+            i2cWriteBuffer(pMotor, [DRIVER_ENABLE, n_MotorPower[pMotor] ? 0x01 : 0x00])
+        }
+
+        /*   if (motorStatus() && (pON !== n_MotorON)) { // !== XOR eine Seite ist true aber nicht beide
+              n_MotorON = pON
+              pins.i2cWriteBuffer(i2cMotor, Buffer.fromArray([DRIVER_ENABLE, n_MotorON ? 0x01 : 0x00]))
+          } */
+    }
+
+    function i2cWriteBuffer(pMotor: eMotor, bytes: number[], repeat = false) {
+        switch (pMotor) {
+            case eMotor.ma, eMotor.mb: {
+                return pins.i2cWriteBuffer(i2cMotorAB, Buffer.fromArray(bytes), repeat) == 0
+            }
+            case eMotor.mc, eMotor.md: {
+                return pins.i2cWriteBuffer(i2cMotorCD, Buffer.fromArray(bytes), repeat) == 0
+            }
+            default:
+                return false
+        }
+    }
+
+    function i2cReadBuffer(pMotor: eMotor, size: number): Buffer {
+        switch (pMotor) {
+            case eMotor.ma, eMotor.mb: {
+                return pins.i2cReadBuffer(i2cMotorAB, size)
+            }
+            case eMotor.mc, eMotor.md: {
+                return pins.i2cReadBuffer(i2cMotorCD, size)
+            }
+            default:
+                return Buffer.create(size)
+        }
+    }
 
 
 } // qwiicmotor.ts
