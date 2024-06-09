@@ -29,6 +29,12 @@ namespace kran_e { // qwiicmotor.ts
     const CONTROL_1 = 0x78 // 0x01: Reset the processor now.
 
     const c_MotorStop = 128
+    let n_MotorChipReady = [false, false, false, false]
+    let n_MotorPower = [false, false, false, false]
+    let n_MotorSpeed = [c_MotorStop, c_MotorStop, c_MotorStop, c_MotorStop]
+
+
+
     let n_MotorReady = false
     let n_MotorON = false       // aktueller Wert im Chip
     let n_MotorA = c_MotorStop  // aktueller Wert im Chip
@@ -77,6 +83,51 @@ namespace kran_e { // qwiicmotor.ts
             return n_MotorReady
         }
     }
+
+
+
+
+    function qMotorChipReady(pMotor: eMotor) {
+        if (n_MotorChipReady[pMotor])
+            return true
+        else {
+            /*
+            bool ready( void );
+            This function checks to see if the SCMD is done booting and is ready to receive commands. Use this
+            after .begin(), and don't progress to your main program until this returns true.
+            SCMD_STATUS_1: Read back basic program status
+                B0: 1 = Enumeration Complete
+                B1: 1 = Device busy
+                B2: 1 = Remote read in progress
+                B3: 1 = Remote write in progress
+                B4: Read state of enable pin U2.5"
+            */
+            n_MotorChipReady[pMotor] = (i2cWriteBuffer(pMotor, [STATUS_1], true)
+                && (i2cReadBuffer(pMotor, 1)[0] & 0x01) == 1) // STATUS_1
+
+            return n_MotorChipReady[pMotor]
+        } // else
+    }
+
+
+
+
+    //% group="Motor"
+    //% block="Motor %pMotor Power %pON" weight=7
+    //% pON.shadow="toggleOnOff"
+    export function qMotorPower(pMotor: eMotor, pON: boolean) { // sendet nur wenn der Wert sich ändert
+        if (qMotorChipReady(pMotor) && (pON !== n_MotorPower[pMotor])) { // !== XOR eine Seite ist true aber nicht beide
+            n_MotorPower[pMotor] = pON
+            i2cWriteBuffer(pMotor, [DRIVER_ENABLE, n_MotorPower[pMotor] ? 0x01 : 0x00])
+        }
+
+        /*   if (motorStatus() && (pON !== n_MotorON)) { // !== XOR eine Seite ist true aber nicht beide
+              n_MotorON = pON
+              pins.i2cWriteBuffer(i2cMotor, Buffer.fromArray([DRIVER_ENABLE, n_MotorON ? 0x01 : 0x00]))
+          } */
+    }
+
+
 
 
 
