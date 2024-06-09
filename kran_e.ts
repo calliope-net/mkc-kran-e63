@@ -40,15 +40,16 @@ namespace kran_e { // kran-e.ts
         // in bluetooth.ts:
         radio.beimStart(funkgruppe)
 
-      //  n_ready = motorReset(ei2cMotor.i2cMotorAB) && motorReset(ei2cMotor.i2cMotorCD)
+        //  n_ready = motorReset(ei2cMotor.i2cMotorAB) && motorReset(ei2cMotor.i2cMotorCD)
+        n_ready = qMotorReset()
     }
 
 
     // group="calliope-net.github.io/mkc-63"
     // block="Car bereit" weight=6
-    export function carReady() {
+    /* export function carReady() {
         return n_ready && motorStatus(ei2cMotor.i2cMotorAB) && motorStatus(ei2cMotor.i2cMotorCD)
-    }
+    } */
 
 
     // ========== group="Motor"
@@ -151,7 +152,7 @@ namespace kran_e { // kran-e.ts
     // ========== group="Status zurück senden"
 
     //% group="Status zurück senden"
-    //% block="Status += %pStatus" weight=6
+    //% block="Status += any %pStatus" weight=6
     export function addStatus(pStatus: any) {
         n_StatusString += " " + convertToText(pStatus)
     }
@@ -161,7 +162,6 @@ namespace kran_e { // kran-e.ts
     export function addStatusHEX(pStatus: number) {
         n_StatusString += " " + Buffer.fromArray([pStatus]).toHex()
     }
-
 
     //% group="Status zurück senden"
     //% block="Status Änderung" weight=4
