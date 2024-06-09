@@ -92,8 +92,9 @@ namespace kran_e { // qwiicmotor.ts
         n_MotorChipReady = [false, false, false, false]
 
         //addStatus(pins.i2cWriteBuffer(i2cMotorAB, Buffer.fromArray([ID])))
-
         //return i2cWriteBuffer(eMotor.ma, [ID])
+
+        pause(2000)
 
         // Motor Chip AB
         if (!i2cWriteBuffer(eMotor.ma, [ID], true)) {
@@ -136,11 +137,26 @@ namespace kran_e { // qwiicmotor.ts
                 B3: 1 = Remote write in progress
                 B4: Read state of enable pin U2.5"
             */
+
+            /* for (let i = 0; i < 5; i += 1) {
+                // Wartezeit 2 s in getStatus-ready
+                pause(2000) // 2 s lange Wartezeit
+                i2cWriteBuffer(pMotor, [STATUS_1], true)
+
+
+                if ((i2cReadBuffer(pMotor, 1)[0] & 0x01) == 1) { // STATUS_1
+                    n_MotorChipReady[pMotor] = true
+                    break
+                }
+            } */
+
             //n_MotorChipReady[pMotor] = (i2cWriteBuffer(pMotor, [STATUS_1], true)
             //    && (i2cReadBuffer(pMotor, 1)[0] & 0x01) == 1) // STATUS_1
-
+            // pause(2000) // 2 s lange Wartezeit
             i2cWriteBuffer(pMotor, [STATUS_1]) // kann I²C Bus Fehler haben
             n_MotorChipReady[pMotor] = (i2cReadBuffer(pMotor, 1)[0] & 0x01) == 1 // STATUS_1
+
+            //  addStatus(n_MotorChipReady[pMotor])
 
             return n_MotorChipReady[pMotor]
         } // else
@@ -154,7 +170,7 @@ namespace kran_e { // qwiicmotor.ts
     //% pON.shadow="toggleOnOff"
     export function qMotorPower(pMotor: eMotor, pON: boolean) { // sendet nur wenn der Wert sich ändert
         if (!qMotorChipReady(pMotor)) {
-            // addStatusHEX(pMotor)
+           // addStatusHEX(pMotor)
         } else if (pON !== n_MotorPower[pMotor]) { // !== XOR eine Seite ist true aber nicht beide
             n_MotorPower[pMotor] = pON
             i2cWriteBuffer(pMotor, [DRIVER_ENABLE, n_MotorPower[pMotor] ? 0x01 : 0x00])
@@ -165,38 +181,41 @@ namespace kran_e { // qwiicmotor.ts
     //% block="Motor %pMotor (1 ↓ 128 ↑ 255) %speed (128 ist STOP)" weight=2
     //% speed.min=0 speed.max=255 speed.defl=128
     export function qMotor255(pMotor: eMotor, speed: number) {
-        if (qMotorChipReady(pMotor)) {
-            if (n_MotorPower[pMotor] && radio.between(speed, 1, 255))
+
+        // addStatusHEX(speed)
+        if (radio.between(speed, 1, 255)) {
+            if (speed != n_MotorSpeed[pMotor]) { // sendet nur, wenn der Wert sich ändert
                 n_MotorSpeed[pMotor] = speed
-            else
-                n_MotorSpeed[pMotor] = c_MotorStop
+                //qMotorWriteRegister(pMotor, n_MotorSpeed[pMotor])
 
-            qMotorWriteRegister(pMotor, n_MotorSpeed[pMotor])
-        } else {
-            //addStatusHEX(pMotor)
-            //addStatusHEX(speed)
+                if (qMotorChipReady(pMotor) && n_MotorPower[pMotor])
+
+                    if (pMotor == eMotor.ma || pMotor == eMotor.mc)
+                        i2cWriteBuffer(pMotor, [MA_DRIVE, speed])
+                    else if (pMotor == eMotor.mb || pMotor == eMotor.md)
+                        i2cWriteBuffer(pMotor, [MB_DRIVE, speed])
+            }
         }
-    }
-
-    function qMotorWriteRegister(pMotor: eMotor, speed: number) {
-        if (speed == n_MotorSpeed[pMotor]) // sendet nur, wenn der Wert sich ändert
-            return true
-        else if (pMotor == eMotor.ma || pMotor == eMotor.mc)
-            return i2cWriteBuffer(pMotor, [MA_DRIVE, speed])
-        else if (pMotor == eMotor.mb || pMotor == eMotor.md)
-            return i2cWriteBuffer(pMotor, [MB_DRIVE, speed])
         else
-            return false
+            qMotor255(pMotor, c_MotorStop)
+        // n_MotorSpeed[pMotor] = c_MotorStop
 
-        /* switch (pMotor) {
-            case eMotor.ma, eMotor.mc:
-                return i2cWriteBuffer(pMotor, [MA_DRIVE, speed])
-            case eMotor.mb, eMotor.md:
-                return i2cWriteBuffer(pMotor, [MB_DRIVE, speed])
-            default:
-                return false
-        } */
+
+
     }
+    /* 
+        function qMotorWriteRegister(pMotor: eMotor, speed: number) {
+          
+            if (qMotorChipReady(pMotor) && n_MotorPower[pMotor])
+    
+    
+                if (pMotor == eMotor.ma || pMotor == eMotor.mc)
+                    i2cWriteBuffer(pMotor, [MA_DRIVE, speed])
+                else if (pMotor == eMotor.mb || pMotor == eMotor.md)
+                    i2cWriteBuffer(pMotor, [MB_DRIVE, speed])
+          
+    
+        } */
 
 
 
