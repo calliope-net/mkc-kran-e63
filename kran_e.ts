@@ -151,10 +151,17 @@ namespace kran_e { // kran-e.ts
     // ========== group="Status zurück senden"
 
     //% group="Status zurück senden"
-    //% block="Status += %pStatus" weight=5
+    //% block="Status += %pStatus" weight=6
     export function addStatus(pStatus: any) {
         n_StatusString += " " + convertToText(pStatus)
     }
+
+    //% group="Status zurück senden"
+    //% block="Status += hex %pStatus" weight=5
+    export function addStatusHEX(pStatus: number) {
+        n_StatusString += " " + Buffer.fromArray([pStatus]).toHex()
+    }
+
 
     //% group="Status zurück senden"
     //% block="Status Änderung" weight=4

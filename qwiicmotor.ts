@@ -86,6 +86,59 @@ namespace kran_e { // qwiicmotor.ts
 
 
 
+    // group="Motor"
+    // block="Motor Reset %i2cMotor" weight=9
+    export function qMotorReset() {
+        /* switch (i2cMotor) {
+            case ei2cMotor.i2cMotorAB: {
+                n_MotorChipReady[eMotor.ma] = false
+                n_MotorChipReady[eMotor.mb] = false
+            }
+            case ei2cMotor.i2cMotorCD: {
+                n_MotorChipReady[eMotor.mc] = false
+                n_MotorChipReady[eMotor.md] = false
+            }
+        } */
+        n_MotorChipReady = [false, false, false, false]
+
+        // Motor Chip AB
+        if (!i2cWriteBuffer(eMotor.ma, [ID], true)) {
+            addStatusHEX(i2cMotorAB) // Modul reagiert nicht
+            return false
+        } else if (i2cReadBuffer(eMotor.ma, 1)[0] == 0xA9) { // Reports hard-coded ID byte of 0xA9
+            i2cWriteBuffer(eMotor.ma, [CONTROL_1, 1]) // Reset the processor now.
+            // hier weiter zum nächsten Motor Chip
+        } else {
+            addStatusHEX(0x10 + i2cMotorAB)
+            return false
+        }
+
+        // Motor Chip CD
+        if (!i2cWriteBuffer(eMotor.mc, [ID], true)) {
+            addStatusHEX(i2cMotorCD) // Modul reagiert nicht
+            return false
+        } else if (i2cReadBuffer(eMotor.mc, 1)[0] == 0xA9) { // Reports hard-coded ID byte of 0xA9
+            return i2cWriteBuffer(eMotor.mc, [CONTROL_1, 1]) // Reset the processor now.
+            // hier return true
+        } else {
+            addStatusHEX(0x10 + i2cMotorCD)
+            return false
+        }
+
+
+
+
+        /* if (pins.i2cWriteBuffer(i2cMotor, Buffer.fromArray([ID]), true) != 0) {
+            addStatusHEX(i2cMotor)
+            return false
+        } else if (pins.i2cReadBuffer(i2cMotor, 1).getUint8(0) == 0xA9) { // Reports hard-coded ID byte of 0xA9
+            pins.i2cWriteBuffer(i2cMotor, Buffer.fromArray([CONTROL_1, 1])) // Reset the processor now.
+            return true
+        } else
+            addStatusHEX(0x10 + i2cMotor)
+        return false */
+    }
+
 
     function qMotorChipReady(pMotor: eMotor) {
         if (n_MotorChipReady[pMotor])
