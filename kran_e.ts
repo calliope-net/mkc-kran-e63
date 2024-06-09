@@ -47,7 +47,7 @@ namespace kran_e { // kran-e.ts
     // group="calliope-net.github.io/mkc-63"
     // block="Car bereit" weight=6
     export function carReady() {
-        return n_ready //&& motorStatus(ei2cMotor.i2cMotorAB) && motorStatus(ei2cMotor.i2cMotorCD)
+        return n_ready && motorStatus(ei2cMotor.i2cMotorAB) && motorStatus(ei2cMotor.i2cMotorCD)
     }
 
 
@@ -151,15 +151,9 @@ namespace kran_e { // kran-e.ts
     // ========== group="Status zurück senden"
 
     //% group="Status zurück senden"
-    //% block="Status += any %pStatus" weight=5
+    //% block="Status += %pStatus" weight=5
     export function addStatus(pStatus: any) {
         n_StatusString += " " + convertToText(pStatus)
-    }
-
-    //% group="Status zurück senden"
-    //% block="Status += hex %pStatus" weight=5
-    export function addStatusHEX(pStatus: number) {
-        n_StatusString += " " + Buffer.fromArray([pStatus]).toHex()
     }
 
     //% group="Status zurück senden"
