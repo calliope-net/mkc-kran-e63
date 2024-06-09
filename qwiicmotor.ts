@@ -5,7 +5,7 @@ namespace kran_e { // qwiicmotor.ts
     const i2cMotorAB = 0x5D
     const i2cMotorCD = 0x5E
 
-  //  export enum ei2cMotor { i2cMotorAB = 0x5D, i2cMotorCD = 0x5E }
+    //  export enum ei2cMotor { i2cMotorAB = 0x5D, i2cMotorCD = 0x5E }
 
     export enum eMotor {
         //% block="MA"
@@ -94,17 +94,6 @@ namespace kran_e { // qwiicmotor.ts
         if (n_MotorChipReady[pMotor])
             return true
         else {
-            /* let i2cMotor: ei2cMotor
-            switch (pMotor) {
-                case eMotor.ma, eMotor.mb: {
-                    i2cMotor = ei2cMotor.i2cMotorAB
-                    break
-                }
-                case eMotor.mc, eMotor.md: {
-                    i2cMotor = ei2cMotor.i2cMotorCD
-                    break
-                }
-            } // switch */
             /*
             bool ready( void );
             This function checks to see if the SCMD is done booting and is ready to receive commands. Use this
@@ -116,7 +105,7 @@ namespace kran_e { // qwiicmotor.ts
                 B3: 1 = Remote write in progress
                 B4: Read state of enable pin U2.5"
             */
-            n_MotorChipReady[pMotor] = (i2cWriteBuffer(pMotor, [STATUS_1], true) 
+            n_MotorChipReady[pMotor] = (i2cWriteBuffer(pMotor, [STATUS_1], true)
                 && (i2cReadBuffer(pMotor, 1)[0] & 0x01) == 1) // STATUS_1
 
             return n_MotorChipReady[pMotor]
@@ -139,14 +128,17 @@ namespace kran_e { // qwiicmotor.ts
           } */
     }
 
+
+
+
+    // ========== qwiicMotor: pins.i2cWriteBuffer pins.i2cReadBuffer
+
     function i2cWriteBuffer(pMotor: eMotor, bytes: number[], repeat = false) {
         switch (pMotor) {
-            case eMotor.ma, eMotor.mb: {
+            case eMotor.ma, eMotor.mb:
                 return pins.i2cWriteBuffer(i2cMotorAB, Buffer.fromArray(bytes), repeat) == 0
-            }
-            case eMotor.mc, eMotor.md: {
+            case eMotor.mc, eMotor.md:
                 return pins.i2cWriteBuffer(i2cMotorCD, Buffer.fromArray(bytes), repeat) == 0
-            }
             default:
                 return false
         }
@@ -154,12 +146,10 @@ namespace kran_e { // qwiicmotor.ts
 
     function i2cReadBuffer(pMotor: eMotor, size: number): Buffer {
         switch (pMotor) {
-            case eMotor.ma, eMotor.mb: {
+            case eMotor.ma, eMotor.mb:
                 return pins.i2cReadBuffer(i2cMotorAB, size)
-            }
-            case eMotor.mc, eMotor.md: {
+            case eMotor.mc, eMotor.md:
                 return pins.i2cReadBuffer(i2cMotorCD, size)
-            }
             default:
                 return Buffer.create(size)
         }
