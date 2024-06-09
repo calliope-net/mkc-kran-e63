@@ -42,6 +42,7 @@ namespace kran_e { // kran-e.ts
 
         //  n_ready = motorReset(ei2cMotor.i2cMotorAB) && motorReset(ei2cMotor.i2cMotorCD)
         n_ready = qMotorReset()
+        addStatus(n_ready)
     }
 
 
