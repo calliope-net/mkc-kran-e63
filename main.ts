@@ -12,6 +12,7 @@ radio.onReceivedData(function (receivedData) {
         kran_e.qMotorPower(kran_e.eMotor.mc, radio.getaktiviert(receivedData, radio.e3aktiviert.mc))
         kran_e.qMotor255(kran_e.eMotor.mc, radio.getByte(receivedData, radio.eBufferPointer.mc, radio.eBufferOffset.b0_Motor))
         kran_e.hupe(radio.getSchalter(receivedData, radio.e0Schalter.b0))
+        kran_e.turnRelay(radio.getSchalter(receivedData, radio.e0Schalter.b1))
         kran_e.rgbLEDon(kran_e.eRGBled.a, 0xff0000, radio.getaktiviert(receivedData, radio.e3aktiviert.m0))
         kran_e.rgbLEDs(kran_e.eRGBled.b, 0x00ff00, true)
     }
@@ -21,9 +22,9 @@ radio.onReceivedData(function (receivedData) {
 })
 kran_e.beimStart(239, 90)
 basic.showLeds(`
-    . . . . .
-    . . . . .
-    . . . . .
+    . . . . #
+    . . . # .
+    . . # . .
     # # # # #
     . # . # .
     `)
