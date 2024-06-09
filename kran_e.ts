@@ -37,7 +37,7 @@ namespace kran_e { // kran-e.ts
 
         pins.setPull(pinEncoder, PinPullMode.PullUp) // Encoder PIN Eingang PullUp
 
-        // in bluetooth.ts:
+        // in Erweiterung fernsteuerung bluetooth.ts:
         radio.beimStart(funkgruppe)
 
         //  n_ready = motorReset(ei2cMotor.i2cMotorAB) && motorReset(ei2cMotor.i2cMotorCD)

@@ -5,7 +5,7 @@ namespace kran_e { // qwiicmotor.ts
     const i2cMotorAB = 0x5D
     const i2cMotorCD = 0x5E
 
-    export enum ei2cMotor { i2cMotorAB = 0x5D, i2cMotorCD = 0x5E }
+   // export enum ei2cMotor { i2cMotorAB = 0x5D, i2cMotorCD = 0x5E }
 
     export enum eMotor {
         //% block="MA"
@@ -89,16 +89,7 @@ namespace kran_e { // qwiicmotor.ts
     // group="Motor"
     // block="Motor Reset %i2cMotor" weight=9
     export function qMotorReset() {
-        /* switch (i2cMotor) {
-            case ei2cMotor.i2cMotorAB: {
-                n_MotorChipReady[eMotor.ma] = false
-                n_MotorChipReady[eMotor.mb] = false
-            }
-            case ei2cMotor.i2cMotorCD: {
-                n_MotorChipReady[eMotor.mc] = false
-                n_MotorChipReady[eMotor.md] = false
-            }
-        } */
+       
         n_MotorChipReady = [false, false, false, false]
 
         // Motor Chip AB
@@ -125,18 +116,6 @@ namespace kran_e { // qwiicmotor.ts
             return false
         }
 
-
-
-
-        /* if (pins.i2cWriteBuffer(i2cMotor, Buffer.fromArray([ID]), true) != 0) {
-            addStatusHEX(i2cMotor)
-            return false
-        } else if (pins.i2cReadBuffer(i2cMotor, 1).getUint8(0) == 0xA9) { // Reports hard-coded ID byte of 0xA9
-            pins.i2cWriteBuffer(i2cMotor, Buffer.fromArray([CONTROL_1, 1])) // Reset the processor now.
-            return true
-        } else
-            addStatusHEX(0x10 + i2cMotor)
-        return false */
     }
 
 
@@ -179,6 +158,8 @@ namespace kran_e { // qwiicmotor.ts
               pins.i2cWriteBuffer(i2cMotor, Buffer.fromArray([DRIVER_ENABLE, n_MotorON ? 0x01 : 0x00]))
           } */
     }
+
+
 
 
 
