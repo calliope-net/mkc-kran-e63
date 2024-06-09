@@ -1,4 +1,7 @@
 radio.onReceivedData(function (receivedData) {
+    if (radio.getSchalter(receivedData, radio.e0Schalter.b7)) {
+        control.reset()
+    }
     if (radio.isBetriebsart(receivedData, radio.e0Betriebsart.p0)) {
         kran_e.motorPower(radio.getaktiviert(receivedData, radio.e3aktiviert.m0))
         kran_e.motor255(Motor.M0, radio.getByte(receivedData, radio.eBufferPointer.m0, radio.eBufferOffset.b0_Motor))

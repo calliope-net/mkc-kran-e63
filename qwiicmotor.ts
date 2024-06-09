@@ -5,7 +5,7 @@ namespace kran_e { // qwiicmotor.ts
     const i2cMotorAB = 0x5D
     const i2cMotorCD = 0x5E
 
-   // export enum ei2cMotor { i2cMotorAB = 0x5D, i2cMotorCD = 0x5E }
+    // export enum ei2cMotor { i2cMotorAB = 0x5D, i2cMotorCD = 0x5E }
 
     export enum eMotor {
         //% block="MA"
@@ -21,7 +21,7 @@ namespace kran_e { // qwiicmotor.ts
     // Register
     const ID = 0x01 // Reports hard-coded ID byte of 0xA9
     const MA_DRIVE = 0x20 // 0x00..0xFF Default 0x80
-    //const MB_DRIVE = 0x21
+    const MB_DRIVE = 0x21
     const DRIVER_ENABLE = 0x70 //  0x01: Enable, 0x00: Disable this driver
     const FSAFE_CTRL = 0x1F // Use to configure what happens when failsafe occurs.
     const FSAFE_TIME = 0x76 // This register sets the watchdog timeout time, from 10 ms to 2.55 seconds.
@@ -35,9 +35,9 @@ namespace kran_e { // qwiicmotor.ts
 
 
 
-  //  let n_MotorReady = false
-  //  let n_MotorON = false       // aktueller Wert im Chip
-  //  let n_MotorA = c_MotorStop  // aktueller Wert im Chip
+    //  let n_MotorReady = false
+    //  let n_MotorON = false       // aktueller Wert im Chip
+    //  let n_MotorA = c_MotorStop  // aktueller Wert im Chip
 
     // group="Motor"
     // block="Motor Reset %i2cMotor" weight=9
@@ -56,40 +56,40 @@ namespace kran_e { // qwiicmotor.ts
 
     // group="Motor"
     // block="Motor bereit %i2cMotor" weight=8
-   /*   function motorStatus(i2cMotor: ei2cMotor): boolean {
-        if (n_MotorReady)
-            return true
-        
-        bool ready( void );
-        This function checks to see if the SCMD is done booting and is ready to receive commands. Use this
-        after .begin(), and don't progress to your main program until this returns true.
-        SCMD_STATUS_1: Read back basic program status
-            B0: 1 = Enumeration Complete
-            B1: 1 = Device busy
-            B2: 1 = Remote read in progress
-            B3: 1 = Remote write in progress
-            B4: Read state of enable pin U2.5"
-        
-        else {
-            for (let i = 0; i < 5; i += 1) {
-                pause(2000) // 2 s lange Wartezeit
-                pins.i2cWriteBuffer(i2cMotor, Buffer.fromArray([STATUS_1]), true)
-
-                if ((pins.i2cReadBuffer(i2cMotor, 1).getUint8(0) & 0x01) == 1) { // STATUS_1
-                    n_MotorReady = true
-                    break
-                }
-            }
-            return n_MotorReady
-        }
-    } */
+    /*   function motorStatus(i2cMotor: ei2cMotor): boolean {
+         if (n_MotorReady)
+             return true
+         
+         bool ready( void );
+         This function checks to see if the SCMD is done booting and is ready to receive commands. Use this
+         after .begin(), and don't progress to your main program until this returns true.
+         SCMD_STATUS_1: Read back basic program status
+             B0: 1 = Enumeration Complete
+             B1: 1 = Device busy
+             B2: 1 = Remote read in progress
+             B3: 1 = Remote write in progress
+             B4: Read state of enable pin U2.5"
+         
+         else {
+             for (let i = 0; i < 5; i += 1) {
+                 pause(2000) // 2 s lange Wartezeit
+                 pins.i2cWriteBuffer(i2cMotor, Buffer.fromArray([STATUS_1]), true)
+ 
+                 if ((pins.i2cReadBuffer(i2cMotor, 1).getUint8(0) & 0x01) == 1) { // STATUS_1
+                     n_MotorReady = true
+                     break
+                 }
+             }
+             return n_MotorReady
+         }
+     } */
 
 
 
     // group="Motor"
     // block="Motor Reset %i2cMotor" weight=9
     export function qMotorReset() {
-       
+
         n_MotorChipReady = [false, false, false, false]
 
         // Motor Chip AB
@@ -152,15 +152,37 @@ namespace kran_e { // qwiicmotor.ts
             n_MotorPower[pMotor] = pON
             i2cWriteBuffer(pMotor, [DRIVER_ENABLE, n_MotorPower[pMotor] ? 0x01 : 0x00])
         }
-
-        /*   if (motorStatus() && (pON !== n_MotorON)) { // !== XOR eine Seite ist true aber nicht beide
-              n_MotorON = pON
-              pins.i2cWriteBuffer(i2cMotor, Buffer.fromArray([DRIVER_ENABLE, n_MotorON ? 0x01 : 0x00]))
-          } */
     }
 
 
 
+    //% group="Motor"
+    //% block="Motor %pMotor (0 ↓ 128 ↑ 255) %speed (128 ist STOP)" weight=4
+    //% speed.min=0 speed.max=255 speed.defl=128
+    export function qMotor255(pMotor: eMotor, speed: number) {
+        if (qMotorChipReady(pMotor)) {
+            if (n_MotorPower[pMotor] && radio.between(speed, 1, 255))
+                n_MotorSpeed[pMotor] = speed
+            else
+                n_MotorSpeed[pMotor] = c_MotorStop
+
+            qMotorWriteRegister(pMotor, n_MotorSpeed[pMotor])
+        }
+    }
+
+    function qMotorWriteRegister(pMotor: eMotor, speed: number) {
+        if (speed == n_MotorSpeed[pMotor]) // sendet nur, wenn der Wert sich ändert
+            return true
+        else
+            switch (pMotor) {
+                case eMotor.ma, eMotor.mc:
+                    return i2cWriteBuffer(pMotor, [MA_DRIVE, speed])
+                case eMotor.mb, eMotor.md:
+                    return i2cWriteBuffer(pMotor, [MB_DRIVE, speed])
+                default:
+                    return false
+            }
+    }
 
 
 
