@@ -192,10 +192,10 @@ namespace kran_e { // qwiicmotor.ts
         }
     }
 
-    //% group="Motor"
-    //% block="Motor %pMotor Power %pON" weight=3
-    //% pON.shadow="toggleOnOff"
-    export function qMotorPower(pMotor: eMotor, pON: boolean) { // sendet nur wenn der Wert sich ändert
+    // group="Motor"
+    // block="Motor %pMotor Power %pON" weight=3
+    // pON.shadow="toggleOnOff"
+    /* export function qMotorPower(pMotor: eMotor, pON: boolean) { // sendet nur wenn der Wert sich ändert
 
         if (!qMotorChipReady(chip(pMotor))) {
             // addStatusHEX(pMotor)
@@ -208,7 +208,7 @@ namespace kran_e { // qwiicmotor.ts
                 rgbLEDon(led(chip(pMotor)), n_MotorChipPower[chip(pMotor)] ? Colors.Blue : 64, true) // kein Fehler blau Helligkeit dunkler bei Motor OFF
             }
         }
-    }
+    } */
 
     //% group="Motor"
     //% block="Motor %pMotor (1 ↓ 128 ↑ 255) %speed (128 ist STOP)" weight=2
