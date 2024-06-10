@@ -94,8 +94,18 @@ namespace kran_e { // qwiicmotor.ts
         //addStatus(pins.i2cWriteBuffer(i2cMotorAB, Buffer.fromArray([ID])))
         //return i2cWriteBuffer(eMotor.ma, [ID])
 
-        pause(2000)
+        //pause(2000)
 
+        control.waitMicros(2000000) // 2 s lange Wartezeit
+
+        let a = qMotorChipReset(i2cMotorAB, eMotor.ma, eRGBled.b)
+
+        control.waitMicros(200)
+
+        let c = qMotorChipReset(i2cMotorCD, eMotor.mc, eRGBled.c)
+
+        return a && c
+/* 
         // Motor Chip AB
         if (!i2cWriteBuffer(eMotor.ma, [ID], true)) {
             addStatusHEX(i2cMotorAB) // Modul reagiert nicht
@@ -118,9 +128,34 @@ namespace kran_e { // qwiicmotor.ts
         } else {
             addStatusHEX(0x10 + i2cMotorCD)
             return false
-        }
+        } */
     }
 
+    function qMotorChipReset(i2c: number, pMotor: eMotor, pRGBled: eRGBled) {
+        rgbLEDon(pRGBled, basic.rgb(255, 0, 0), true)
+
+        if (!i2cWriteBuffer(pMotor, [ID], true)) {
+            basic.showString(Buffer.fromArray([i2c]).toHex())
+            //addStatusHEX(i2cMotorAB) // Modul reagiert nicht
+            return false
+        }
+
+        rgbLEDon(pRGBled, basic.rgb(255, 255, 0), true)
+
+        if (!(i2cReadBuffer(pMotor, 1)[0] == 0xA9)) { // Reports hard-coded ID byte of 0xA9
+            return false
+        }
+
+        rgbLEDon(pRGBled, basic.rgb(255, 0, 255), true)
+
+        if (!i2cWriteBuffer(pMotor, [CONTROL_1, 1])) { // Reset the processor now.
+            return false
+        }
+
+        rgbLEDon(pRGBled, basic.rgb(0, 255, 0), true)
+
+        return true
+    }
 
     function qMotorChipReady(pMotor: eMotor) { // fragt den I²C Status ab wenn false
         if (n_MotorChipReady[pMotor])
@@ -153,7 +188,9 @@ namespace kran_e { // qwiicmotor.ts
             //n_MotorChipReady[pMotor] = (i2cWriteBuffer(pMotor, [STATUS_1], true)
             //    && (i2cReadBuffer(pMotor, 1)[0] & 0x01) == 1) // STATUS_1
             // pause(2000) // 2 s lange Wartezeit
+
             i2cWriteBuffer(pMotor, [STATUS_1]) // kann I²C Bus Fehler haben
+            
             n_MotorChipReady[pMotor] = (i2cReadBuffer(pMotor, 1)[0] & 0x01) == 1 // STATUS_1
 
             //  addStatus(n_MotorChipReady[pMotor])
@@ -170,7 +207,7 @@ namespace kran_e { // qwiicmotor.ts
     //% pON.shadow="toggleOnOff"
     export function qMotorPower(pMotor: eMotor, pON: boolean) { // sendet nur wenn der Wert sich ändert
         if (!qMotorChipReady(pMotor)) {
-           // addStatusHEX(pMotor)
+            // addStatusHEX(pMotor)
         } else if (pON !== n_MotorPower[pMotor]) { // !== XOR eine Seite ist true aber nicht beide
             n_MotorPower[pMotor] = pON
             i2cWriteBuffer(pMotor, [DRIVER_ENABLE, n_MotorPower[pMotor] ? 0x01 : 0x00])
