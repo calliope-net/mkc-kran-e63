@@ -186,7 +186,7 @@ namespace kran_e { // qwiicmotor.ts
                 }
             } */
 
-            let l: eRGBled = (isAB(pMotor) ? eRGBled.b : eRGBled.c)
+            let l: eRGBled = isAB(pMotor) ? eRGBled.b : eRGBled.c
 
             //n_MotorChipReady[pMotor] = (i2cWriteBuffer(pMotor, [STATUS_1], true)
             //    && (i2cReadBuffer(pMotor, 1)[0] & 0x01) == 1) // STATUS_1
@@ -197,7 +197,7 @@ namespace kran_e { // qwiicmotor.ts
             }
 
             if ((i2cReadBuffer(pMotor, 1)[0] & 0x01) == 1) {
-                rgbLEDon(l, Colors.Blue, true)
+                rgbLEDon(l, Colors.Off, true)
                 n_MotorChipReady[pMotor] = true
             }
 
@@ -219,9 +219,12 @@ namespace kran_e { // qwiicmotor.ts
         if (!qMotorChipReady(pMotor)) {
             // addStatusHEX(pMotor)
         } else if (pON !== n_MotorPower[pMotor]) { // !== XOR eine Seite ist true aber nicht beide
+            let l: eRGBled = (isAB(pMotor) ? eRGBled.b : eRGBled.c)
             n_MotorPower[pMotor] = pON
             if (!i2cWriteBuffer(pMotor, [DRIVER_ENABLE, n_MotorPower[pMotor] ? 0x01 : 0x00])) {
-                rgbLEDon((isAB(pMotor) ? eRGBled.b : eRGBled.c), Colors.Purple, true)
+                rgbLEDon(l, Colors.Purple, true) // Fehler
+            } else {
+                rgbLEDon(l, n_MotorPower[pMotor] ? Colors.Blue : 64, true) // kein Fehler blau Helligkeit dunkler bei Motor OFF
             }
         }
     }
@@ -245,7 +248,7 @@ namespace kran_e { // qwiicmotor.ts
                         e = i2cWriteBuffer(pMotor, [MB_DRIVE, speed])
 
                     if (!e)
-                        rgbLEDon((isAB(pMotor) ? eRGBled.b : eRGBled.c), Colors.White, true)
+                        rgbLEDon(isAB(pMotor) ? eRGBled.b : eRGBled.c, Colors.White, true)
                 }
             }
 
