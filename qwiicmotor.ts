@@ -16,7 +16,12 @@ namespace kran_e { // qwiicmotor.ts
         md = 3,
     }
 
-    enum eMotorChip { ab, cd }
+    export enum eMotorChip {
+        //% block="AB"
+        ab,
+        //% block="CD"
+        cd
+    }
 
     function chip(pMotor: eMotor): eMotorChip {
         if (pMotor == eMotor.mc || pMotor == eMotor.md)
@@ -173,7 +178,19 @@ namespace kran_e { // qwiicmotor.ts
         */
     }
 
-
+    //% group="Motor"
+    //% block="Motor Chip %pMotorChip Power %pON" weight=3
+    //% pON.shadow="toggleOnOff"
+    export function qMotorChipPower(pMotorChip: eMotorChip, pON: boolean) {
+        if (qMotorChipReady(pMotorChip) && pON !== n_MotorChipPower[pMotorChip]) {
+            n_MotorChipPower[pMotorChip] = pON
+            if (!i2cWriteBuffer(pMotorChip, [DRIVER_ENABLE, n_MotorChipPower[pMotorChip] ? 0x01 : 0x00])) {
+                rgbLEDon(led(pMotorChip), Colors.Purple, true) // Fehler
+            } else {
+                rgbLEDon(led(pMotorChip), n_MotorChipPower[pMotorChip] ? Colors.Blue : 64, true) // kein Fehler blau Helligkeit dunkler bei Motor OFF
+            }
+        }
+    }
 
     //% group="Motor"
     //% block="Motor %pMotor Power %pON" weight=3
