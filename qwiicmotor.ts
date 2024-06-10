@@ -6,20 +6,20 @@ namespace kran_e { // qwiicmotor.ts
     const i2cMotorCD = 0x5E
 
     export enum eMotor {
-        //% block="MA"
+        //% block="A"
         ma = 0,
-        //% block="MB"
+        //% block="B"
         mb = 1,
-        //% block="MC"
+        //% block="C"
         mc = 2,
-        //% block="MD"
+        //% block="D"
         md = 3,
     }
 
     export enum eMotorChip {
-        //% block="AB"
+        //% block="A B"
         ab,
-        //% block="CD"
+        //% block="C D"
         cd
     }
 

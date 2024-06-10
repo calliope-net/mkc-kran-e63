@@ -29,5 +29,7 @@ basic.showLeds(`
 loops.everyInterval(700, function () {
     if (radio.timeout(1000)) {
         kran_e.rgbLEDs(kran_e.eRGBled.a, 0x00ff00, true)
+        kran_e.qMotorChipPower(kran_e.eMotorChip.ab, false)
+        kran_e.qMotorChipPower(kran_e.eMotorChip.cd, false)
     }
 })
