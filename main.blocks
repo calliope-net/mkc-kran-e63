@@ -1,6 +1,6 @@
 <xml xmlns="https://developers.google.com/blockly/xml"><block type="pxt-on-start" id="|MFk;!1@92S6d~=?*l=Q" x="0" y="0"><statement name="HANDLER"><block type="kran_e_beimStart" id="6o1:)fM_*tR-mob4g*t~"><value name="funkgruppe"><shadow type="math_number_minmax" id="Td1_J~mRf~D9Z9P?9u.^"><mutation min="0" max="255" label="Number" precision="0"></mutation><field name="SLIDER">239</field></shadow></value><value name="servoGeradeaus"><shadow type="math_number_minmax" id="2mcsMWlU-x5]EWYKHOgY"><mutation min="81" max="99" label="Number" precision="0"></mutation><field name="SLIDER">90</field></shadow></value><next><block type="device_show_leds" id="CjBzZXas:5AlP[$9b/L`"><field name="LEDS">`
         . . . . # 
-        . . . # . 
+        . . # # . 
         . . # . . 
         # # # # # 
         . # . # .

@@ -22,7 +22,7 @@ radio.onReceivedData(function (receivedData) {
 kran_e.beimStart(239, 90)
 basic.showLeds(`
     . . . . #
-    . . . # .
+    . . # # .
     . . # . .
     # # # # #
     . # . # .
