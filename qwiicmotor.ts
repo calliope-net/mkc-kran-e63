@@ -18,6 +18,22 @@ namespace kran_e { // qwiicmotor.ts
         md = 3,
     }
 
+    enum eMotorChip { ab, cd }
+
+    function chip(pMotor: eMotor): eMotorChip {
+        if (pMotor == eMotor.ma || pMotor == eMotor.mb)
+            return eMotorChip.ab // 0
+        else
+            return eMotorChip.cd // 1
+    }
+
+    function led(pMotor: eMotor): eRGBled {
+        if (pMotor == eMotor.ma || pMotor == eMotor.mb)
+            return eRGBled.b // 1
+        else
+            return eRGBled.c // 2
+    }
+
     // Register
     const ID = 0x01 // Reports hard-coded ID byte of 0xA9
     const MA_DRIVE = 0x20 // 0x00..0xFF Default 0x80
@@ -29,8 +45,12 @@ namespace kran_e { // qwiicmotor.ts
     const CONTROL_1 = 0x78 // 0x01: Reset the processor now.
 
     const c_MotorStop = 128
-    let n_MotorChipReady = [false, false, false, false]
-    let n_MotorPower = [false, false, false, false]
+    let n_MotorChipReady = [false, false]
+    // let n_MotorABReady = false
+    // let n_MotorCDReady = false
+    let n_MotorChipPower = [false, false]
+    // let n_MotorABPower = false
+    // let n_MotorCDPower = false
     let n_MotorSpeed = [c_MotorStop, c_MotorStop, c_MotorStop, c_MotorStop]
 
 
@@ -89,7 +109,9 @@ namespace kran_e { // qwiicmotor.ts
 
     export function qMotorReset() { // aufgerufen beim Start
 
-        n_MotorChipReady = [false, false, false, false]
+        n_MotorChipReady = [false, false]
+        //   n_MotorABReady = false
+        //   n_MotorCDReady = false
 
         //addStatus(pins.i2cWriteBuffer(i2cMotorAB, Buffer.fromArray([ID])))
         //return i2cWriteBuffer(eMotor.ma, [ID])
@@ -158,56 +180,96 @@ namespace kran_e { // qwiicmotor.ts
         return true
     }
 
+
+
     function qMotorChipReady(pMotor: eMotor) { // fragt den I²C Status ab wenn false
-        if (n_MotorChipReady[pMotor])
+
+        //  let l: eRGBled = isAB(pMotor) ? eRGBled.b : eRGBled.c
+
+        // if (isAB(pMotor)) {
+        // Motor AB
+        if (n_MotorChipReady[chip(pMotor)])
             return true
         else {
-            /*
-            bool ready( void );
-            This function checks to see if the SCMD is done booting and is ready to receive commands. Use this
-            after .begin(), and don't progress to your main program until this returns true.
-            SCMD_STATUS_1: Read back basic program status
-                B0: 1 = Enumeration Complete
-                B1: 1 = Device busy
-                B2: 1 = Remote read in progress
-                B3: 1 = Remote write in progress
-                B4: Read state of enable pin U2.5"
-            */
-
-            /* for (let i = 0; i < 5; i += 1) {
-                // Wartezeit 2 s in getStatus-ready
-                pause(2000) // 2 s lange Wartezeit
-                i2cWriteBuffer(pMotor, [STATUS_1], true)
-
-
-                if ((i2cReadBuffer(pMotor, 1)[0] & 0x01) == 1) { // STATUS_1
-                    n_MotorChipReady[pMotor] = true
-                    break
-                }
-            } */
-
-            let l: eRGBled = isAB(pMotor) ? eRGBled.b : eRGBled.c
-
-            //n_MotorChipReady[pMotor] = (i2cWriteBuffer(pMotor, [STATUS_1], true)
-            //    && (i2cReadBuffer(pMotor, 1)[0] & 0x01) == 1) // STATUS_1
-            // pause(2000) // 2 s lange Wartezeit
-
-            if (!i2cWriteBuffer(pMotor, [STATUS_1])) {// kann I²C Bus Fehler haben
-                rgbLEDon(l, Colors.Violet, true)
-            }
+            if (!i2cWriteBuffer(pMotor, [STATUS_1]))  // kann I²C Bus Fehler haben
+                rgbLEDon(led(pMotor), Colors.Violet, true)
 
             if ((i2cReadBuffer(pMotor, 1)[0] & 0x01) == 1) {
-                rgbLEDon(l, Colors.Off, true)
-                n_MotorChipReady[pMotor] = true
+                rgbLEDon(led(pMotor), Colors.Off, true)
+                n_MotorChipReady[chip(pMotor)] = true
+                // n_MotorChipReady[pMotor] = true
             }
+            return n_MotorChipReady[chip(pMotor)]
+        }
 
-            //  n_MotorChipReady[pMotor] = (i2cReadBuffer(pMotor, 1)[0] & 0x01) == 1 // STATUS_1
+        // } 
+        /* else {
+            // Motor CD
+            if (n_MotorCDReady)
+                return true
+            else {
+                if (!i2cWriteBuffer(pMotor, [STATUS_1]))  // kann I²C Bus Fehler haben
+                    rgbLEDon(eRGBled.c, Colors.Violet, true)
 
-            //  addStatus(n_MotorChipReady[pMotor])
+                if ((i2cReadBuffer(pMotor, 1)[0] & 0x01) == 1) {
+                    rgbLEDon(eRGBled.c, Colors.Off, true)
+                    n_MotorCDReady = true
+                    // n_MotorChipReady[pMotor] = true
+                }
+                return n_MotorCDReady
+            }
+        } */
 
-            return n_MotorChipReady[pMotor]
-        } // else
+
+
+        /*
+        bool ready( void );
+        This function checks to see if the SCMD is done booting and is ready to receive commands. Use this
+        after .begin(), and don't progress to your main program until this returns true.
+        SCMD_STATUS_1: Read back basic program status
+            B0: 1 = Enumeration Complete
+            B1: 1 = Device busy
+            B2: 1 = Remote read in progress
+            B3: 1 = Remote write in progress
+            B4: Read state of enable pin U2.5"
+        */
+
+
+
+        /* if (n_MotorChipReady[pMotor])
+            return true
+        else { */
+
+        /* for (let i = 0; i < 5; i += 1) {
+            // Wartezeit 2 s in getStatus-ready
+            pause(2000) // 2 s lange Wartezeit
+            i2cWriteBuffer(pMotor, [STATUS_1], true)
+
+
+            if ((i2cReadBuffer(pMotor, 1)[0] & 0x01) == 1) { // STATUS_1
+                n_MotorChipReady[pMotor] = true
+                break
+            }
+        } */
+
+
+
+        //n_MotorChipReady[pMotor] = (i2cWriteBuffer(pMotor, [STATUS_1], true)
+        //    && (i2cReadBuffer(pMotor, 1)[0] & 0x01) == 1) // STATUS_1
+        // pause(2000) // 2 s lange Wartezeit
+
+        /* if (!i2cWriteBuffer(pMotor, [STATUS_1])) {// kann I²C Bus Fehler haben
+            rgbLEDon(l, Colors.Violet, true)
+        }
+
+        if ((i2cReadBuffer(pMotor, 1)[0] & 0x01) == 1) {
+            rgbLEDon(l, Colors.Off, true)
+            n_MotorChipReady[pMotor] = true
+        }
+       
+        return n_MotorChipReady[pMotor] */
     }
+
 
 
 
@@ -216,17 +278,42 @@ namespace kran_e { // qwiicmotor.ts
     //% block="Motor %pMotor Power %pON" weight=3
     //% pON.shadow="toggleOnOff"
     export function qMotorPower(pMotor: eMotor, pON: boolean) { // sendet nur wenn der Wert sich ändert
-        if (!qMotorChipReady(pMotor)) {
-            // addStatusHEX(pMotor)
-        } else if (pON !== n_MotorPower[pMotor]) { // !== XOR eine Seite ist true aber nicht beide
-            let l: eRGBled = (isAB(pMotor) ? eRGBled.b : eRGBled.c)
-            n_MotorPower[pMotor] = pON
-            if (!i2cWriteBuffer(pMotor, [DRIVER_ENABLE, n_MotorPower[pMotor] ? 0x01 : 0x00])) {
-                rgbLEDon(l, Colors.Purple, true) // Fehler
-            } else {
-                rgbLEDon(l, n_MotorPower[pMotor] ? Colors.Blue : 64, true) // kein Fehler blau Helligkeit dunkler bei Motor OFF
+      /*   if (isAB(pMotor)) {
+            // Motor AB
+            if (!qMotorChipReady(pMotor) && pON !== n_MotorABPower) {
+                n_MotorABPower = pON
+                if (!i2cWriteBuffer(pMotor, [DRIVER_ENABLE, n_MotorABPower ? 0x01 : 0x00])) {
+                    rgbLEDon(eRGBled.b, Colors.Purple, true) // Fehler
+                } else {
+                    rgbLEDon(eRGBled.b, n_MotorABPower ? Colors.Blue : 64, true) // kein Fehler blau Helligkeit dunkler bei Motor OFF
+                }
+            }
+        } else {
+
+            // Motor CD
+            if (!qMotorChipReady(pMotor) && pON !== n_MotorCDPower) {
+                n_MotorCDPower = pON
+                if (!i2cWriteBuffer(pMotor, [DRIVER_ENABLE, n_MotorCDPower ? 0x01 : 0x00])) {
+                    rgbLEDon(eRGBled.c, Colors.Purple, true) // Fehler
+                } else {
+                    rgbLEDon(eRGBled.c, n_MotorCDPower ? Colors.Blue : 64, true) // kein Fehler blau Helligkeit dunkler bei Motor OFF
+                }
             }
         }
+ */
+
+        
+                if (!qMotorChipReady(pMotor)) {
+                    // addStatusHEX(pMotor)
+                } else if (pON !== n_MotorChipPower[chip(pMotor)]) { // !== XOR eine Seite ist true aber nicht beide
+                  //  let l: eRGBled = (isAB(pMotor) ? eRGBled.b : eRGBled.c)
+                    n_MotorChipPower[chip(pMotor)] = pON
+                    if (!i2cWriteBuffer(pMotor, [DRIVER_ENABLE, n_MotorChipPower[chip(pMotor)] ? 0x01 : 0x00])) {
+                        rgbLEDon(led(pMotor), Colors.Purple, true) // Fehler
+                    } else {
+                        rgbLEDon(led(pMotor), n_MotorChipPower[chip(pMotor)]? Colors.Blue : 64, true) // kein Fehler blau Helligkeit dunkler bei Motor OFF
+                    }
+                }
     }
 
     //% group="Motor"
@@ -240,7 +327,7 @@ namespace kran_e { // qwiicmotor.ts
                 n_MotorSpeed[pMotor] = speed
                 //qMotorWriteRegister(pMotor, n_MotorSpeed[pMotor])
 
-                if (qMotorChipReady(pMotor) && n_MotorPower[pMotor]) {
+                if (qMotorChipReady(pMotor) && n_MotorChipPower[chip(pMotor)]) {
 
                     if (pMotor == eMotor.ma || pMotor == eMotor.mc)
                         e = i2cWriteBuffer(pMotor, [MA_DRIVE, speed])
