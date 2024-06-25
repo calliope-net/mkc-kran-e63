@@ -1,6 +1,6 @@
 
 namespace kran_e { // qwiicrelay.ts
-
+/* 
     // I²C Adresse Single Relay
     const i2cRelay = 0x19
 
@@ -13,5 +13,5 @@ namespace kran_e { // qwiicrelay.ts
     export function turnRelay(pOn: boolean) {
         pins.i2cWriteBuffer(i2cRelay, Buffer.fromArray([pOn ? SINGLE_ON : SINGLE_OFF]))
     }
-
+ */
 } // qwiicrelay.ts

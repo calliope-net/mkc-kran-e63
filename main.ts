@@ -3,22 +3,22 @@ radio.onReceivedData(function (receivedData) {
         control.reset()
     }
     if (radio.isBetriebsart(receivedData, radio.e0Betriebsart.p0)) {
-        kran_e.motor255(Motor.M0, radio.getByte(receivedData, radio.eBufferPointer.m0, radio.eBufferOffset.b0_Motor))
-        kran_e.servo_set16(radio.getByte(receivedData, radio.eBufferPointer.m0, radio.eBufferOffset.b1_Servo))
-        kran_e.qMotorChipPower(kran_e.eMotorChip.ab, radio.getaktiviert(receivedData, radio.e3aktiviert.ma) || radio.getaktiviert(receivedData, radio.e3aktiviert.mb))
-        kran_e.qMotor255(kran_e.eMotor.ma, radio.getByte(receivedData, radio.eBufferPointer.ma, radio.eBufferOffset.b0_Motor))
-        kran_e.qMotor255(kran_e.eMotor.mb, radio.getByte(receivedData, radio.eBufferPointer.mb, radio.eBufferOffset.b0_Motor))
-        kran_e.qMotorChipPower(kran_e.eMotorChip.cd, radio.getaktiviert(receivedData, radio.e3aktiviert.mc))
-        kran_e.qMotor255(kran_e.eMotor.mc, radio.getByte(receivedData, radio.eBufferPointer.mc, radio.eBufferOffset.b0_Motor))
-        kran_e.hupe(radio.getSchalter(receivedData, radio.e0Schalter.b0))
-        kran_e.turnRelay(radio.getSchalter(receivedData, radio.e0Schalter.b1))
-        kran_e.rgbLEDs(kran_e.eRGBled.a, 0x0000ff, true)
+        receiver.motor255(receiver.eMotor01.M0, radio.getByte(receivedData, radio.eBufferPointer.m0, radio.eBufferOffset.b0_Motor))
+        receiver.servo_set16(radio.getByte(receivedData, radio.eBufferPointer.m0, radio.eBufferOffset.b1_Servo))
+        receiver.qMotorChipPower(receiver.eMotorChip.ab, radio.getaktiviert(receivedData, radio.e3aktiviert.ma) || radio.getaktiviert(receivedData, radio.e3aktiviert.mb))
+        receiver.qMotor255(receiver.eMotor.ma, radio.getByte(receivedData, radio.eBufferPointer.ma, radio.eBufferOffset.b0_Motor))
+        receiver.qMotor255(receiver.eMotor.mb, radio.getByte(receivedData, radio.eBufferPointer.mb, radio.eBufferOffset.b0_Motor))
+        receiver.qMotorChipPower(receiver.eMotorChip.cd, radio.getaktiviert(receivedData, radio.e3aktiviert.mc))
+        receiver.qMotor255(receiver.eMotor.mc, radio.getByte(receivedData, radio.eBufferPointer.mc, radio.eBufferOffset.b0_Motor))
+        receiver.ringTone(radio.getSchalter(receivedData, radio.e0Schalter.b0))
+        receiver.qwiicRelay(radio.getSchalter(receivedData, radio.e0Schalter.b1))
+        receiver.rgbLEDs(receiver.eRGBled.a, 0xff0000, true)
     }
-    if (kran_e.chStatus() && radio.getSchalter(receivedData, radio.e0Schalter.b6)) {
-        radio.sendString(kran_e.getStatus())
+    if (receiver.chStatus() && radio.getSchalter(receivedData, radio.e0Schalter.b6)) {
+        radio.sendString(receiver.getStatus(true))
     }
 })
-kran_e.beimStart(239, 90)
+receiver.beimStart(90)
 basic.showLeds(`
     . . . . #
     . . # # .
@@ -28,8 +28,8 @@ basic.showLeds(`
     `)
 loops.everyInterval(700, function () {
     if (radio.timeout(1000)) {
-        kran_e.rgbLEDs(kran_e.eRGBled.a, 0x00ff00, true)
-        kran_e.qMotorChipPower(kran_e.eMotorChip.ab, false)
-        kran_e.qMotorChipPower(kran_e.eMotorChip.cd, false)
+        receiver.rgbLEDs(receiver.eRGBled.a, 0x00ff00, true)
+        receiver.qMotorChipPower(receiver.eMotorChip.ab, false)
+        receiver.qMotorChipPower(receiver.eMotorChip.cd, false)
     }
 })
