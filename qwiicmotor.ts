@@ -127,7 +127,7 @@ namespace kran_e { // qwiicmotor.ts
         */
     }
 
-
+/* 
     //% group="Motor"
     //% block="Motor Chip %pMotorChip Power %pON" weight=3
     //% pON.shadow="toggleOnOff"
@@ -169,7 +169,7 @@ namespace kran_e { // qwiicmotor.ts
         else
             qMotor255(pMotor, c_MotorStop)
     }
-
+ */
 
 
 
