@@ -11,11 +11,7 @@
     "files": [
         "main.blocks",
         "main.ts",
-        "README.md",
-        "kran_e.ts",
-        "aktoren.ts",
-        "qwiicmotor.ts",
-        "qwiicrelay.ts"
+        "README.md"
     ],
     "testFiles": [
         "test.ts"
@@ -27,5 +23,5 @@
     "supportedTargets": [
         "calliopemini"
     ],
-    "preferredEditor": "blocksprj"
+    "preferredEditor": "tsprj"
 }
