@@ -17,9 +17,11 @@ radio.onReceivedData(function (receivedData) {
     if (receiver.chStatus() && radio.getSchalter(receivedData, radio.e0Schalter.b6)) {
         radio.sendString(receiver.getStatus(true))
     }
-    radio.zeige5x5Status(receivedData)
+    radio.zeige5x5Buffer(receivedData)
+    radio.zeige5x5Joystick(receivedData)
 })
-receiver.beimStart(90)
+receiver.beimStart(receiver.eHardware.v3, 90)
+radio.zeige5x5Funkgruppe()
 loops.everyInterval(700, function () {
     if (radio.timeout(1000)) {
         receiver.rgbLEDs(receiver.eRGBled.a, 0x00ff00, true, 5)
