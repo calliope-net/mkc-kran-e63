@@ -24,7 +24,7 @@ input.onButtonEvent(Button.A, input.buttonEventValue(ButtonEvent.Hold), function
 input.onButtonEvent(Button.B, input.buttonEventValue(ButtonEvent.Hold), function () {
     storage.putNumber(StorageSlots.s1, radio.getFunkgruppe(1))
 })
-receiver.beimStart(receiver.eHardware.v3, 90, storage.getNumber(StorageSlots.s1))
+receiver.beimStart(receiver.eModell.v3, 90, storage.getNumber(StorageSlots.s1))
 storage.putNumber(StorageSlots.s1, radio.getFunkgruppe(0))
 loops.everyInterval(700, function () {
     if (radio.timeout(60000, true)) {

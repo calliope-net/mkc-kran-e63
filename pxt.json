@@ -5,7 +5,7 @@
     "dependencies": {
         "core": "*",
         "v3": "*",
-        "fernsteuerung": "github:calliope-net/fernsteuerung#v0.2.52",
+        "fernsteuerung": "github:calliope-net/fernsteuerung#v0.3.0",
         "storage": "github:calliope-edu/pxt-storage#a34aec53d1c15fe4d8dbdb96737b3bf059260565"
     },
     "files": [
