@@ -1,11 +1,3 @@
-input.onButtonEvent(Button.A, input.buttonEventValue(ButtonEvent.Click), function () {
-    radio.setFunkgruppeButton(radio.eFunkgruppeButton.minus)
-    storage.putNumber(StorageSlots.s1, radio.storageBufferGet())
-})
-input.onButtonEvent(Button.B, input.buttonEventValue(ButtonEvent.Click), function () {
-    radio.setFunkgruppeButton(radio.eFunkgruppeButton.plus)
-    storage.putNumber(StorageSlots.s1, radio.storageBufferGet())
-})
 radio.onReceivedData(function (receivedData) {
     if (radio.isBetriebsart(receivedData, radio.e0Betriebsart.p0)) {
         receiver.motor255(receiver.eMotor01.M0, radio.getByte(receivedData, radio.eBufferPointer.m0, radio.eBufferOffset.b0_Motor))
@@ -25,6 +17,14 @@ radio.onReceivedData(function (receivedData) {
     }
     radio.zeige5x5Buffer(receivedData)
     radio.zeige5x5Joystick(receivedData)
+})
+input.onButtonEvent(Button.A, input.buttonEventValue(ButtonEvent.Hold), function () {
+    radio.setFunkgruppeButton(radio.eFunkgruppeButton.minus)
+    storage.putNumber(StorageSlots.s1, radio.storageBufferGet())
+})
+input.onButtonEvent(Button.B, input.buttonEventValue(ButtonEvent.Hold), function () {
+    radio.setFunkgruppeButton(radio.eFunkgruppeButton.plus)
+    storage.putNumber(StorageSlots.s1, radio.storageBufferGet())
 })
 receiver.beimStart(receiver.eModell.v3, 90, storage.getNumber(StorageSlots.s1))
 storage.putNumber(StorageSlots.s1, radio.storageBufferGet())
