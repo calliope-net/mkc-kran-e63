@@ -8,8 +8,10 @@ radio.onReceivedData(function (receivedData) {
         receiver.qMotor255(receiver.eMotor.mb, radio.getByte(receivedData, radio.eBufferPointer.mb, radio.eBufferOffset.b0_Motor))
         receiver.qMotorChipPower(receiver.eMotorChip.cd, radio.getaktiviert(receivedData, radio.e3aktiviert.mc))
         receiver.qMotor255(receiver.eMotor.mc, radio.getByte(receivedData, radio.eBufferPointer.mc, radio.eBufferOffset.b0_Motor))
+        receiver.qMotor255(receiver.eMotor.md, radio.getByte(receivedData, radio.eBufferPointer.md, radio.eBufferOffset.b0_Motor))
         receiver.ringTone(radio.getSchalter(receivedData, radio.e0Schalter.b0))
         receiver.qwiicRelay(radio.getSchalter(receivedData, radio.e0Schalter.b1))
+        receiver.pinGPIO4(radio.getSchalter(receivedData, radio.e0Schalter.b2))
         receiver.rgbLEDs(receiver.eRGBled.a, 0x0000ff, true)
     }
     if (receiver.chStatus() && radio.getSchalter(receivedData, radio.e0Schalter.b6)) {
