@@ -1,8 +1,10 @@
 input.onButtonEvent(Button.A, input.buttonEventValue(ButtonEvent.Click), function () {
-    storage.putNumber(StorageSlots.s1, radio.setFunkgruppeButton(radio.eFunkgruppeButton.minus))
+    radio.setFunkgruppeButton(radio.eFunkgruppeButton.minus)
+    storage.putNumber(StorageSlots.s1, radio.storageBufferGet())
 })
 input.onButtonEvent(Button.B, input.buttonEventValue(ButtonEvent.Click), function () {
-    storage.putNumber(StorageSlots.s1, radio.setFunkgruppeButton(radio.eFunkgruppeButton.plus))
+    radio.setFunkgruppeButton(radio.eFunkgruppeButton.plus)
+    storage.putNumber(StorageSlots.s1, radio.storageBufferGet())
 })
 radio.onReceivedData(function (receivedData) {
     if (radio.isBetriebsart(receivedData, radio.e0Betriebsart.p0)) {
@@ -25,7 +27,7 @@ radio.onReceivedData(function (receivedData) {
     radio.zeige5x5Joystick(receivedData)
 })
 receiver.beimStart(receiver.eModell.v3, 90, storage.getNumber(StorageSlots.s1))
-storage.putNumber(StorageSlots.s1, radio.setFunkgruppeButton(radio.eFunkgruppeButton.anzeigen))
+storage.putNumber(StorageSlots.s1, radio.storageBufferGet())
 loops.everyInterval(700, function () {
     if (radio.timeout(60000, true)) {
         receiver.pinRelay(false)
