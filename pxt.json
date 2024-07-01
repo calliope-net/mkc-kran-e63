@@ -5,8 +5,9 @@
     "dependencies": {
         "core": "*",
         "v3": "*",
-        "fernsteuerung": "github:calliope-net/fernsteuerung#v0.4.5",
-        "storage": "github:calliope-edu/pxt-storage#a34aec53d1c15fe4d8dbdb96737b3bf059260565"
+        "fernsteuerung": "github:calliope-net/fernsteuerung#v0.4.7",
+        "storage": "github:calliope-edu/pxt-storage#a34aec53d1c15fe4d8dbdb96737b3bf059260565",
+        "lcd-20x4": "github:calliope-net/lcd-20x4#v2.0.1"
     },
     "files": [
         "main.blocks",
