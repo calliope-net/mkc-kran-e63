@@ -15,7 +15,7 @@ radio.onReceivedData(function (receivedData) {
         receiver.ringTone(radio.getSchalter(receivedData, radio.e0Schalter.b0))
         receiver.digitalWritePin(receiver.eDigitalPins.C16, !(radio.getSchalter(receivedData, radio.e0Schalter.b0)))
         receiver.qwiicRelay(radio.getSchalter(receivedData, radio.e0Schalter.b1))
-        receiver.pinGPIO4(radio.getSchalter(receivedData, radio.e0Schalter.b2))
+        receiver.pinLicht(radio.getSchalter(receivedData, radio.e0Schalter.b2))
         receiver.rgbLEDs(receiver.eRGBled.a, 0x0000ff, true)
     }
     if (receiver.chStatus() && radio.getSchalter(receivedData, radio.e0Schalter.b6)) {
@@ -23,9 +23,8 @@ radio.onReceivedData(function (receivedData) {
     }
     radio.zeige5x5Buffer(receivedData)
     radio.zeige5x5Joystick(receivedData)
-    if (receiver.qUltrasonic()) {
-        lcd20x4.writeText(lcd20x4.lcd20x4_eADDR(lcd20x4.eADDR.LCD_20x4), 2, 0, 4, receiver.readDistancemm(receiver.eDist.cm), lcd20x4.eAlign.right)
-    }
+    lcd20x4.writeText(lcd20x4.lcd20x4_eADDR(lcd20x4.eADDR.LCD_20x4), 2, 0, 4, receiver.entfernung_modell(), lcd20x4.eAlign.right)
+    lcd20x4.writeText(lcd20x4.lcd20x4_eADDR(lcd20x4.eADDR.LCD_20x4), 2, 6, 7, receiver.spursensor_2bit(), lcd20x4.eAlign.right)
 })
 input.onButtonEvent(Button.A, input.buttonEventValue(ButtonEvent.Hold), function () {
     radio.setFunkgruppeButton(radio.eFunkgruppeButton.minus)
