@@ -25,16 +25,17 @@ input.onButtonEvent(Button.B, input.buttonEventValue(ButtonEvent.Hold), function
 })
 receiver.beimStart(
 receiver.eModell.v3,
-96,
+90,
 true,
-67,
+65,
+true,
 storage.getNumber(StorageSlots.s1)
 )
 storage.putNumber(StorageSlots.s1, receiver.storageBufferGet())
 lcd20x4.initLCD(lcd20x4.lcd20x4_eADDR(lcd20x4.eADDR.LCD_20x4))
 lcd20x4.writeText(lcd20x4.lcd20x4_eADDR(lcd20x4.eADDR.LCD_20x4), 0, 0, 19, lcd20x4.lcd20x4_text("Calliope mini v3"))
 lcd20x4.writeText(lcd20x4.lcd20x4_eADDR(lcd20x4.eADDR.LCD_20x4), 1, 0, 19, lcd20x4.lcd20x4_text("Maker Kit Car"))
-loops.everyInterval(700, function () {
+loops.everyInterval(500, function () {
     if (radio.timeout(60000, true)) {
         receiver.pinRelay(false)
     } else if (radio.timeout(1000)) {
