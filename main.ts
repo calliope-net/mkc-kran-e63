@@ -25,9 +25,9 @@ input.onButtonEvent(Button.B, input.buttonEventValue(ButtonEvent.Hold), function
 })
 receiver.beimStart(
 receiver.erModell.v3,
-90,
+96,
 true,
-65,
+67,
 true,
 storage.getNumber(StorageSlots.s1)
 )
