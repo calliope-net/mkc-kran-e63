@@ -17,11 +17,11 @@ radio.onReceivedData(function (receivedData) {
 })
 input.onButtonEvent(Button.A, input.buttonEventValue(ButtonEvent.Hold), function () {
     radio.setFunkgruppeButton(radio.eFunkgruppeButton.minus)
-    storage.putNumber(StorageSlots.s1, radio.storageBufferGet())
+    storage.putNumber(StorageSlots.s1, receiver.storageBufferGet())
 })
 input.onButtonEvent(Button.B, input.buttonEventValue(ButtonEvent.Hold), function () {
     radio.setFunkgruppeButton(radio.eFunkgruppeButton.plus)
-    storage.putNumber(StorageSlots.s1, radio.storageBufferGet())
+    storage.putNumber(StorageSlots.s1, receiver.storageBufferGet())
 })
 receiver.beimStart(
 receiver.eModell.v3,
@@ -30,7 +30,7 @@ true,
 67,
 storage.getNumber(StorageSlots.s1)
 )
-storage.putNumber(StorageSlots.s1, radio.storageBufferGet())
+storage.putNumber(StorageSlots.s1, receiver.storageBufferGet())
 lcd20x4.initLCD(lcd20x4.lcd20x4_eADDR(lcd20x4.eADDR.LCD_20x4))
 lcd20x4.writeText(lcd20x4.lcd20x4_eADDR(lcd20x4.eADDR.LCD_20x4), 0, 0, 19, lcd20x4.lcd20x4_text("Calliope mini v3"))
 lcd20x4.writeText(lcd20x4.lcd20x4_eADDR(lcd20x4.eADDR.LCD_20x4), 1, 0, 19, lcd20x4.lcd20x4_text("Maker Kit Car"))
