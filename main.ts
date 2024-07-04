@@ -24,7 +24,7 @@ input.onButtonEvent(Button.B, input.buttonEventValue(ButtonEvent.Hold), function
     storage.putNumber(StorageSlots.s1, receiver.storageBufferGet())
 })
 receiver.beimStart(
-receiver.eModell.v3,
+receiver.erModell.v3,
 90,
 true,
 65,
