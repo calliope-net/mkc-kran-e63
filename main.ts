@@ -1,6 +1,6 @@
 input.onButtonEvent(Button.A, input.buttonEventClick(), function () {
-    receiver.encoder_start(100)
-    receiver.selectEncoderMotor255(195)
+    receiver.encoderStartStrecke(20)
+    receiver.encoderSelectMotor(128)
 })
 radio.onReceivedData(function (receivedData) {
     if (radio.isBetriebsart(receivedData, radio.e0Betriebsart.p0)) {
@@ -13,7 +13,7 @@ radio.onReceivedData(function (receivedData) {
         radio.zeige5x5Buffer(receivedData)
         radio.zeige5x5Joystick(receivedData)
     }
-    lcd20x4.writeText(lcd20x4.lcd20x4_eADDR(lcd20x4.eADDR.LCD_20x4), 3, 14, 18, receiver.encoder_get(receiver.eEncoderEinheit.cm), lcd20x4.eAlign.right)
+    lcd20x4.writeText(lcd20x4.lcd20x4_eADDR(lcd20x4.eADDR.LCD_20x4), 3, 14, 18, receiver.encoderCounter(receiver.eEncoderEinheit.cm), lcd20x4.eAlign.right)
 })
 input.onButtonEvent(Button.A, input.buttonEventValue(ButtonEvent.Hold), function () {
     radio.setFunkgruppeButton(radio.eFunkgruppeButton.minus)
