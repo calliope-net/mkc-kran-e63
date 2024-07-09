@@ -41,7 +41,7 @@ loops.everyInterval(500, function () {
     } else if (radio.timeout(1000)) {
         receiver.rgbLEDs(receiver.eRGBled.a, 0x00ff00, true, 5)
         receiver.ringTone(false)
-        receiver.qMotorChipPower(receiver.eMotorChip.ab, false)
-        receiver.qMotorChipPower(receiver.eMotorChip.cd, false)
+        receiver.qwiicMotorChipPower(receiver.eQwiicMotorChip.ab, false)
+        receiver.qwiicMotorChipPower(receiver.eQwiicMotorChip.cd, false)
     }
 })
