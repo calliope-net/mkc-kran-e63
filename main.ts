@@ -43,5 +43,6 @@ loops.everyInterval(500, function () {
         receiver.ringTone(false)
         receiver.qwiicMotorChipPower(receiver.eQwiicMotorChip.ab, false)
         receiver.qwiicMotorChipPower(receiver.eQwiicMotorChip.cd, false)
+        receiver.dualMotor128(receiver.eDualMotor.M0_M1, 128)
     }
 })
