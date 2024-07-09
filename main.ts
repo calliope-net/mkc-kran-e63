@@ -7,7 +7,7 @@ radio.onReceivedData(function (receivedData) {
         receiver.sendM0(receivedData)
         receiver.ringTone(radio.getSchalter(receivedData, radio.e0Schalter.b0))
         receiver.digitalWritePin(receiver.eDigitalPins.C16, !(radio.getSchalter(receivedData, radio.e0Schalter.b0)))
-        receiver.qwiicRelay(radio.getSchalter(receivedData, radio.e0Schalter.b1))
+        receiver.writeQwiicRelay(radio.getSchalter(receivedData, radio.e0Schalter.b1))
         receiver.pinLicht(!(radio.getSchalter(receivedData, radio.e0Schalter.b2)))
         receiver.rgbLEDs(receiver.eRGBled.a, 0x0000ff, true)
         radio.zeige5x5Buffer(receivedData)
