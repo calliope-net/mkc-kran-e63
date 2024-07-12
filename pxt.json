@@ -4,10 +4,11 @@
     "description": "",
     "dependencies": {
         "core": "*",
-        "v3": "*",
-        "fernsteuerung": "github:calliope-net/fernsteuerung#v0.7.20",
+        "fernsteuerung": "github:calliope-net/fernsteuerung#v0.8.4",
         "storage": "github:calliope-edu/pxt-storage#a34aec53d1c15fe4d8dbdb96737b3bf059260565",
-        "lcd-20x4": "github:calliope-net/lcd-20x4#v2.0.1"
+        "lcd-20x4": "github:calliope-net/lcd-20x4#v2.0.1",
+        "funk": "*",
+        "v3": "*"
     },
     "files": [
         "main.blocks",
@@ -18,11 +19,11 @@
         "test.ts"
     ],
     "targetVersions": {
-        "target": "6.0.37",
+        "target": "6.0.40",
         "targetId": "calliopemini"
     },
     "supportedTargets": [
         "calliopemini"
     ],
-    "preferredEditor": "blocksprj"
+    "preferredEditor": "tsprj"
 }
