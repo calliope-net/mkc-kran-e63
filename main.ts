@@ -4,11 +4,9 @@ input.onButtonEvent(Button.A, input.buttonEventClick(), function () {
 })
 input.onButtonEvent(Button.A, input.buttonEventValue(ButtonEvent.Hold), function () {
     btf.setFunkgruppeButton(btf.eFunkgruppeButton.minus)
-    storage.putNumber(StorageSlots.s1, receiver.storageBufferGet())
 })
 input.onButtonEvent(Button.B, input.buttonEventValue(ButtonEvent.Hold), function () {
     btf.setFunkgruppeButton(btf.eFunkgruppeButton.plus)
-    storage.putNumber(StorageSlots.s1, receiver.storageBufferGet())
 })
 btf.onReceivedData(function (receivedData) {
     if (btf.isBetriebsart(receivedData, btf.e0Betriebsart.p0)) {
@@ -27,11 +25,8 @@ receiver.beimStart(
 receiver.eHardware.v3,
 96,
 true,
-67,
-true,
-storage.getNumber(StorageSlots.s1)
+67
 )
-storage.putNumber(StorageSlots.s1, receiver.storageBufferGet())
 lcd20x4.initLCD(lcd20x4.lcd20x4_eADDR(lcd20x4.eADDR.LCD_20x4))
 lcd20x4.writeText(lcd20x4.lcd20x4_eADDR(lcd20x4.eADDR.LCD_20x4), 0, 0, 19, lcd20x4.lcd20x4_text("Calliope mini v3"))
 lcd20x4.writeText(lcd20x4.lcd20x4_eADDR(lcd20x4.eADDR.LCD_20x4), 1, 0, 19, lcd20x4.lcd20x4_text("Maker Kit Car"))
