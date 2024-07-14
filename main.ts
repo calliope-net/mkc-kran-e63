@@ -2,26 +2,26 @@ input.onButtonEvent(Button.A, input.buttonEventClick(), function () {
     receiver.encoderStartStrecke(20)
     receiver.encoderSelectMotor(128)
 })
-radio.onReceivedData(function (receivedData) {
-    if (radio.isBetriebsart(receivedData, radio.e0Betriebsart.p0)) {
-        receiver.sendM0(receivedData)
-        receiver.ringTone(radio.getSchalter(receivedData, radio.e0Schalter.b0))
-        receiver.digitalWritePin(receiver.eDigitalPins.C16, !(radio.getSchalter(receivedData, radio.e0Schalter.b0)))
-        receiver.writeQwiicRelay(radio.getSchalter(receivedData, radio.e0Schalter.b1))
-        receiver.pinLicht(!(radio.getSchalter(receivedData, radio.e0Schalter.b2)))
-        receiver.rgbLEDs(receiver.eRGBled.a, 0x0000ff, true)
-        radio.zeige5x5Buffer(receivedData)
-        radio.zeige5x5Joystick(receivedData)
-    }
-    lcd20x4.writeText(lcd20x4.lcd20x4_eADDR(lcd20x4.eADDR.LCD_20x4), 3, 14, 18, receiver.encoderCounter(receiver.eEncoderEinheit.cm), lcd20x4.eAlign.right)
-})
 input.onButtonEvent(Button.A, input.buttonEventValue(ButtonEvent.Hold), function () {
-    radio.setFunkgruppeButton(radio.eFunkgruppeButton.minus)
+    btf.setFunkgruppeButton(btf.eFunkgruppeButton.minus)
     storage.putNumber(StorageSlots.s1, receiver.storageBufferGet())
 })
 input.onButtonEvent(Button.B, input.buttonEventValue(ButtonEvent.Hold), function () {
-    radio.setFunkgruppeButton(radio.eFunkgruppeButton.plus)
+    btf.setFunkgruppeButton(btf.eFunkgruppeButton.plus)
     storage.putNumber(StorageSlots.s1, receiver.storageBufferGet())
+})
+btf.onReceivedData(function (receivedData) {
+    if (btf.isBetriebsart(receivedData, btf.e0Betriebsart.p0)) {
+        receiver.sendM0(receivedData)
+        receiver.ringTone(btf.getSchalter(receivedData, btf.e0Schalter.b0))
+        receiver.digitalWritePin(receiver.eDigitalPins.C16, !(btf.getSchalter(receivedData, btf.e0Schalter.b0)))
+        receiver.writeQwiicRelay(btf.getSchalter(receivedData, btf.e0Schalter.b1))
+        receiver.pinLicht(!(btf.getSchalter(receivedData, btf.e0Schalter.b2)))
+        receiver.rgbLEDs(receiver.eRGBled.a, 0x0000ff, true)
+        btf.zeige5x5Buffer(receivedData)
+        btf.zeige5x5Joystick(receivedData)
+    }
+    lcd20x4.writeText(lcd20x4.lcd20x4_eADDR(lcd20x4.eADDR.LCD_20x4), 3, 14, 18, receiver.encoderCounter(receiver.eEncoderEinheit.cm), lcd20x4.eAlign.right)
 })
 receiver.beimStart(
 receiver.eHardware.v3,
@@ -36,9 +36,9 @@ lcd20x4.initLCD(lcd20x4.lcd20x4_eADDR(lcd20x4.eADDR.LCD_20x4))
 lcd20x4.writeText(lcd20x4.lcd20x4_eADDR(lcd20x4.eADDR.LCD_20x4), 0, 0, 19, lcd20x4.lcd20x4_text("Calliope mini v3"))
 lcd20x4.writeText(lcd20x4.lcd20x4_eADDR(lcd20x4.eADDR.LCD_20x4), 1, 0, 19, lcd20x4.lcd20x4_text("Maker Kit Car"))
 loops.everyInterval(500, function () {
-    if (radio.timeout(60000, true)) {
+    if (btf.timeout(60000, true)) {
         receiver.pinRelay(false)
-    } else if (radio.timeout(1000)) {
+    } else if (btf.timeout(1000)) {
         receiver.rgbLEDs(receiver.eRGBled.a, 0x00ff00, true, 5)
         receiver.ringTone(false)
         receiver.qwiicMotorChipPower(receiver.eQwiicMotorChip.ab, false)
