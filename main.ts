@@ -2,10 +2,7 @@ input.onButtonEvent(Button.A, input.buttonEventClick(), function () {
     receiver.encoderStartStrecke(20)
     receiver.encoderSelectMotor(128)
 })
-input.onButtonEvent(Button.A, input.buttonEventValue(ButtonEvent.Hold), function () {
-    btf.setFunkgruppeButton(btf.eFunkgruppeButton.minus)
-})
-input.onButtonEvent(Button.B, input.buttonEventValue(ButtonEvent.Hold), function () {
+input.onButtonEvent(Button.B, btf.buttonEventValue(ButtonEvent.Hold), function () {
     btf.setFunkgruppeButton(btf.eFunkgruppeButton.plus)
 })
 btf.onReceivedData(function (receivedData) {
@@ -20,6 +17,9 @@ btf.onReceivedData(function (receivedData) {
         btf.zeige5x5Joystick(receivedData)
     }
     lcd20x4.writeText(lcd20x4.lcd20x4_eADDR(lcd20x4.eADDR.LCD_20x4), 3, 14, 18, receiver.encoderCounter(receiver.eEncoderEinheit.cm), lcd20x4.eAlign.right)
+})
+input.onButtonEvent(Button.A, btf.buttonEventValue(ButtonEvent.Hold), function () {
+    btf.setFunkgruppeButton(btf.eFunkgruppeButton.minus)
 })
 receiver.beimStart(
 receiver.eHardware.v3,
