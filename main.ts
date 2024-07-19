@@ -6,7 +6,7 @@ input.onButtonEvent(Button.B, btf.buttonEventValue(ButtonEvent.Hold), function (
     btf.setFunkgruppeButton(btf.eFunkgruppeButton.plus)
 })
 btf.onReceivedData(function (receivedData) {
-    if (btf.isBetriebsart(receivedData, btf.e0Betriebsart.p0)) {
+    if (btf.isBetriebsart(receivedData, btf.e0Betriebsart.p0Fahren)) {
         receiver.sendM0(receivedData)
         receiver.ringTone(btf.getSchalter(receivedData, btf.e0Schalter.b0))
         receiver.digitalWritePin(receiver.eDigitalPins.C16, !(btf.getSchalter(receivedData, btf.e0Schalter.b0)))
