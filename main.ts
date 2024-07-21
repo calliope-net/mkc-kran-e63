@@ -3,7 +3,7 @@ input.onButtonEvent(Button.A, input.buttonEventClick(), function () {
     receiver.encoderSelectMotor(128)
 })
 input.onButtonEvent(Button.B, btf.buttonEventValue(ButtonEvent.Hold), function () {
-    btf.setFunkgruppeButton(btf.eFunkgruppeButton.plus)
+    btf.buttonBhold()
 })
 btf.onReceivedData(function (receivedData) {
     if (btf.isBetriebsart(receivedData, btf.e0Betriebsart.p0Fahren)) {
@@ -19,7 +19,7 @@ btf.onReceivedData(function (receivedData) {
     lcd20x4.writeText(lcd20x4.lcd20x4_eADDR(lcd20x4.eADDR.LCD_20x4), 3, 14, 18, receiver.encoderCounter(receiver.eEncoderEinheit.cm), lcd20x4.eAlign.right)
 })
 input.onButtonEvent(Button.A, btf.buttonEventValue(ButtonEvent.Hold), function () {
-    btf.setFunkgruppeButton(btf.eFunkgruppeButton.minus)
+    btf.buttonAhold()
 })
 receiver.beimStart(
 receiver.eHardware.v3,
